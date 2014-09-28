@@ -43,7 +43,7 @@ namespace brown {
 				// new client TODO: check if client is already in the list
 				pthread_mutex_lock(&connectedClientsMutex);
 					connectedClients.push_back(client);
-					strStream << "Received request from new client " << client
+					strStream << "Server: Received request from new client " << client
 							<< " [" << connectedClients.size() << " client(s) connected]" << std::endl;
 				pthread_mutex_unlock(&connectedClientsMutex);
 				break;
@@ -52,14 +52,14 @@ namespace brown {
 				pthread_mutex_lock(&connectedClientsMutex);
 					connectedClients.erase(std::remove(connectedClients.begin(),
 							connectedClients.end(), client), connectedClients.end());
-					strStream << "Received exit request from client " << client
+					strStream << "Server: Received exit request from client " << client
 							<< " [" << connectedClients.size() << " client(s) connected]" << std::endl;
 				pthread_mutex_unlock(&connectedClientsMutex);
 				exit = true;
 				break;
 			case 2:
 				// client query
-				strStream << "Received query request from " << client << std::endl;
+				strStream << "Server: Received query request from " << client << std::endl;
 				break;
 		}
 		std::cout << strStream.str();
@@ -74,6 +74,6 @@ namespace brown {
 		response.requestId = 0;
 		strncpy(response.payload, "", 1);
 		write(connection, (char*)&response, sizeof(service_request));
-		std::cout << "Response sent to " << request.domainName << ":" << request.portNumber << std::endl;
+		std::cout << "Server: Response sent to " << request.domainName << ":" << request.portNumber << std::endl;
 	}
 }

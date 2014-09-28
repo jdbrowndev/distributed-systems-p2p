@@ -31,17 +31,17 @@ namespace brown {
 
 		// Bind socket to an address
 		if (!stepToPort()) {
-			std::cout << "server_connection: Error binding to socket" << std::endl;
+			std::cout << "Server: Error binding to socket" << std::endl;
 			exit(0);
 		}
 
 		// Listen to the socket
 		if (listen(socketdesc, 1) < 0) {
-			std::cout << "server_connection: Error in listen" << std::endl;
+			std::cout << "Server: Error in listen" << std::endl;
 			exit(0);
 		}
 
-		std::cout << "Server listening on port " << port << std::endl;
+		std::cout << "Server: Listening on port " << port << std::endl;
 
 		return port;
 	}

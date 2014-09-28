@@ -29,7 +29,7 @@ namespace brown {
 		// Connect to the host
 		connection = connect(socketdesc, myinfo->ai_addr, myinfo->ai_addrlen);
 		if (connection < 0) {
-			std::cout << "client_connection: Error in connect" << std::endl;
+			std::cout << "Client: Error in connect" << std::endl;
 			exit(0);
 		}
 	}
@@ -41,12 +41,12 @@ namespace brown {
 	service_request client_connection::sendRequest(service_request request) {
 		// Send request
 		write(socketdesc, (char*)&request, sizeof(service_request));
-		std::cout << "Sent request to " << host << ":" << port << std::endl;
+		std::cout << "Client: Sent request to " << host << ":" << port << std::endl;
 
 		// Read response
 		service_request response;
 		read(socketdesc, (char*)&response, sizeof(service_request));
-		std::cout << "Received response from " << response.domainName << ":"
+		std::cout << "Client: Received response from " << response.domainName << ":"
 				<< response.portNumber << std::endl;
 
 		return response;

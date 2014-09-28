@@ -30,7 +30,7 @@ namespace brown {
 		for(;;) {
 			connection = accept(socketdesc, NULL, NULL);
 			if (connection < 0) {
-				std::cout << "request_handler: Error in accept" << std::endl;
+				std::cout << "Server: Error in accept" << std::endl;
 				exit(0);
 			} else {
 				// create worker thread to handle connection

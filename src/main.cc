@@ -22,6 +22,7 @@ void validateInput(char* lowPort, char* highPort);
 int main(int argc, char** argv) {
 
 	// TODO: these values should be pulled from 'portnums' file
+	// TODO: load hosts from 'neighbors' file
 	char lowPort[] = "2000";
 	char highPort[] = "3000";
 	validateInput(lowPort, highPort);
