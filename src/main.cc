@@ -29,11 +29,11 @@ int main(int argc, char** argv) {
 	initGlobals();
 
 	server_connection serverConnection(atoi(lowPort), atoi(highPort));
-	char* port = serverConnection.openConnection();
+	serverConnection.openConnection();
 
 	// TODO: launch client stuff here
 
-	request_handler handler(serverConnection.getSocketDesc(), port);
+	request_handler handler(serverConnection.getSocketDesc(), serverConnection.getPort());
 	handler.serviceRequests();
 }
 

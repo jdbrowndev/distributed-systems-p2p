@@ -26,7 +26,7 @@ namespace brown {
 		port = new char[PORT_MAX_LENGTH+1];
 	}
 
-	char* server_connection::openConnection() {
+	void server_connection::openConnection() {
 		openSocket();
 
 		// Bind socket to an address
@@ -42,8 +42,6 @@ namespace brown {
 		}
 
 		std::cout << "Server: Listening on port " << port << std::endl;
-
-		return port;
 	}
 
 	bool server_connection::stepToPort() {
@@ -59,5 +57,9 @@ namespace brown {
 			current++;
 		}
 		return false;
+	}
+
+	char* server_connection::getPort() {
+		return port;
 	}
 }

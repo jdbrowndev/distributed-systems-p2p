@@ -24,7 +24,8 @@ namespace brown {
 		bool stepToPort();
 	public:
 		server_connection(int lowPort, int highPort);
-		char* openConnection();
+		void openConnection();
+		char* getPort();
 	};
 }
 
