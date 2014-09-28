@@ -40,7 +40,7 @@ namespace brown {
 		strStream.str(std::string()); // clear stream
 		switch(request.requestType) {
 			case 0:
-				// new client TODO: check if client is already in the list
+				// new client TODO: do not add client to list here... instead, do nothing
 				pthread_mutex_lock(&connectedClientsMutex);
 					connectedClients.push_back(client);
 					strStream << "Server: Received request from new client " << client
@@ -48,7 +48,8 @@ namespace brown {
 				pthread_mutex_unlock(&connectedClientsMutex);
 				break;
 			case 1:
-				// client exiting TODO: do not remove client from the list
+				// client exiting
+				// TODO: do not remove client from the list; instead, check if client exists in vector; if it does not, add it to vector and append it to neighbors file (beware of deadlock)
 				pthread_mutex_lock(&connectedClientsMutex);
 					connectedClients.erase(std::remove(connectedClients.begin(),
 							connectedClients.end(), client), connectedClients.end());
