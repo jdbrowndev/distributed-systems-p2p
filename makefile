@@ -18,4 +18,5 @@ bin/network_connection.o: src/network_connection.cc src/network_connection.h
 bin/service_request.o: src/service_request.cc src/service_request.h
 	g++ -c -g src/service_request.cc -o bin/service_request.o
 clean:
-	rm bin/*
+	rm bin/*.o
+	rm bin/main
