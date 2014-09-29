@@ -18,8 +18,8 @@ namespace brown {
 	static const int PORT_MAXIMUM = 65535;
 	static const char* DOMAIN_NAME = "einstein.etsu.edu";
 }
-extern pthread_mutex_t connectedClientsMutex;
-extern std::vector<std::string> connectedClients;
+extern pthread_mutex_t neighborsMutex;
+extern std::vector<std::string> neighbors;
 extern void initGlobals();
 
 #endif /* GLOBALS_H_ */

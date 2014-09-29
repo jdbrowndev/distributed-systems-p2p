@@ -14,9 +14,9 @@
 
 using namespace brown;
 
-pthread_mutex_t connectedClientsMutex;
-std::vector<std::string> connectedClients;
+pthread_mutex_t neighborsMutex;
+std::vector<std::string> neighbors;
 
 void initGlobals() {
-	pthread_mutex_init(&connectedClientsMutex, NULL);
+	pthread_mutex_init(&neighborsMutex, NULL);
 }

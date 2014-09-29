@@ -41,21 +41,21 @@ void validateInput(char* lowPort, char* highPort) {
 	int lowPortInt = atoi(lowPort);
 	int highPortInt = atoi(highPort);
 	if(strlen(lowPort) == 0 || strlen(highPort) == 0) {
-		std::cout << "The portnums file must provide lower and upper port boundaries"
+		std::cout << "portnums: The file must provide lower and upper port boundaries"
 				<< std::endl;
 		exit(0);
 	}
 	if(lowPortInt > highPortInt) {
-		std::cout << "The lower port boundary must be less than the higher port boundary"
+		std::cout << "portnums: The lower port boundary must be less than the higher port boundary"
 				<< std::endl;
 		exit(0);
 	}
 	if(lowPortInt < PORT_MINIMUM || highPortInt < PORT_MINIMUM) {
-		std::cout << "Port number boundaries must be greater than or equal to "
+		std::cout << "portnums: Port number boundaries must be greater than or equal to "
 				<< PORT_MINIMUM << std::endl;
 		exit(0);
 	} else if (lowPortInt > PORT_MAXIMUM || highPortInt > PORT_MAXIMUM) {
-		std::cout << "Port number boundaries must be less than or equal to "
+		std::cout << "portnums: Port number boundaries must be less than or equal to "
 				<< PORT_MAXIMUM << std::endl;
 		exit(0);
 	}
