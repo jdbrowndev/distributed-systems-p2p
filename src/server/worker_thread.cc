@@ -38,24 +38,22 @@ namespace brown {
 		strStream << request.domainName << ":" << request.portNumber;
 		std::string client = strStream.str();
 		strStream.str(std::string()); // clear stream
+		bool newNeighbor = false;
 		switch(request.requestType) {
 			case 0:
-				// new client TODO: do not add client to list here... instead, do nothing
-				pthread_mutex_lock(&neighborsMutex);
-					neighbors.push_back(client);
-					strStream << "Server: Received request from new client " << client
-							<< " [" << neighbors.size() << " client(s) connected]" << std::endl;
-				pthread_mutex_unlock(&neighborsMutex);
+				// new client connection
+				strStream << "Server: Received request from new client " << client << std::endl;
 				break;
 			case 1:
 				// client exiting
-				// TODO: do not remove client from the list; instead, check if client exists in vector; if it does not, add it to vector and append it to neighbors file (beware of deadlock)
 				pthread_mutex_lock(&neighborsMutex);
-					neighbors.erase(std::remove(neighbors.begin(),
-							neighbors.end(), client), neighbors.end());
-					strStream << "Server: Received exit request from client " << client
-							<< " [" << neighbors.size() << " client(s) connected]" << std::endl;
+					newNeighbor = std::find(neighbors.begin(), neighbors.end(), client) == neighbors.end();
+					if(newNeighbor) {
+						neighbors.push_back(client);
+					}
 				pthread_mutex_unlock(&neighborsMutex);
+				// TODO: if newNeighbor == true, append new neighbor to 'neighbors' file
+				strStream << "Server: Received exit request from client " << client << std::endl;
 				exit = true;
 				break;
 			case 2:
