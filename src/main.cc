@@ -9,15 +9,17 @@
 #include <string.h>
 #include <stdlib.h>
 #include <iostream>
+#include <pthread.h>
 #include "globals.h"
 #include "server/request_handler.h"
 #include "server/server_connection.h"
-#include "client/client_connection.h"
+#include "client/client_interface.h"
 #include "service_request.h"
 
 using namespace brown;
 
 void validateInput(char* lowPort, char* highPort);
+void* launchClientInterface(void* args);
 
 int main(int argc, char** argv) {
 
@@ -31,7 +33,8 @@ int main(int argc, char** argv) {
 	server_connection serverConnection(atoi(lowPort), atoi(highPort));
 	serverConnection.openConnection();
 
-	// TODO: launch client stuff here
+	pthread_t clientInterfaceThread;
+	pthread_create(&clientInterfaceThread, NULL, launchClientInterface, (void*)serverConnection.getPort());
 
 	request_handler handler(serverConnection.getSocketDesc(), serverConnection.getPort());
 	handler.serviceRequests();
@@ -59,4 +62,12 @@ void validateInput(char* lowPort, char* highPort) {
 				<< PORT_MAXIMUM << std::endl;
 		exit(0);
 	}
+}
+
+void* launchClientInterface(void* args) {
+	char* port = (char*)args;
+	client_interface interface(port);
+	interface.initialize();
+	pthread_exit(0);
+	return NULL;
 }
