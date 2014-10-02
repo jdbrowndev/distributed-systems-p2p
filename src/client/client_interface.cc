@@ -11,6 +11,7 @@
 #include <string>
 #include <map>
 #include <sstream>
+#include <pthread.h>
 #include <algorithm>
 #include <regex.h>
 #include "client_connection.h"
@@ -43,8 +44,9 @@ namespace brown {
 		getline(std::cin, host);
 		std::cout << "port>";
 		getline(std::cin, port);
-		neighbors.push_back(host + ":" + port);
-		// TODO: record neighbor to file
+		std::string neighbor = host + ":" + port;
+		appendToNeighborsVector(neighbor);
+		appendToNeighborsFile(neighbor);
 	}
 
 	void client_interface::promptCommand() {

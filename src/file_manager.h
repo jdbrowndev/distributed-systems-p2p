@@ -13,21 +13,23 @@
 #include <iostream>
 #include <string>
 
-using namespace std;
-
 namespace brown {
 	class file_manager {
+	private:
+		static const char* PORTNUMS_FILE_NAME;
+		static const char* NEIGHBORS_FILE_NAME;
 	public:
+		file_manager();
 		void openPortNumsFile();
 		void closePortNumsFile();
 		void openNeighborsFile();
 		void closeNeighborsFile();
-		int* readPortNumsFile(int ports[]);
+		std::string* readPortNumsFile(std::string ports[]);
 		void readNeighborsFile();
-		void appendNeighborToFile(string neighbor);
+		void appendNeighborToFile(std::string neighbor);
 	protected:
-		ifstream portnumsFile;
-		fstream neighborsFile;
+		std::fstream portnumsFile;
+		std::fstream neighborsFile;
 	};
 }
 

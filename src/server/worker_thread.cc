@@ -46,13 +46,11 @@ namespace brown {
 				break;
 			case 1:
 				// client exiting
-				pthread_mutex_lock(&neighborsMutex);
-					newNeighbor = std::find(neighbors.begin(), neighbors.end(), client) == neighbors.end();
-					if(newNeighbor) {
-						neighbors.push_back(client);
-					}
-				pthread_mutex_unlock(&neighborsMutex);
-				// TODO: if newNeighbor == true, append new neighbor to 'neighbors' file
+				newNeighbor = std::find(neighbors.begin(), neighbors.end(), client) == neighbors.end();
+				if(newNeighbor) {
+					appendToNeighborsVector(client);
+					appendToNeighborsFile(client);
+				}
 				strStream << "Server: Received exit request from client " << client << std::endl;
 				exit = true;
 				break;
