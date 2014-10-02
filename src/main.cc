@@ -1,10 +1,10 @@
 //
-// server.cc
+// main.cc
 //
 // Author: Jordan Brown
 // Date: Sep 1, 2014
 //
-// Entry point for server application
+// Entry point for client/server application
 
 #include <string.h>
 #include <stdlib.h>

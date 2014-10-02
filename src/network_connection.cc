@@ -4,7 +4,7 @@
 // Author: Jordan Brown
 // Date: Sep 27, 2014
 //
-//
+// Parent class for TCP/IP connections
 
 #include <stdlib.h>
 #include <sys/types.h>

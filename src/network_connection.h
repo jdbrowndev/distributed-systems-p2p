@@ -4,7 +4,8 @@
 // Author: Jordan Brown
 // Date: Sep 27, 2014
 //
-//
+// Parent class for TCP/IP connections
+
 #ifndef NETWORK_CONNECTION_H_
 #define NETWORK_CONNECTION_H_
 

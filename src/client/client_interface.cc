@@ -4,7 +4,7 @@
 // Author: Jordan Brown
 // Date: Sep 28, 2014
 //
-//
+// Manages client command line interface
 
 #include <iostream>
 #include <string.h>

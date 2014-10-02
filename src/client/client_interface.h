@@ -4,7 +4,7 @@
 // Author: Jordan Brown
 // Date: Sep 28, 2014
 //
-//
+// Manages client command line interface
 
 #ifndef CLIENT_INTERFACE_H_
 #define CLIENT_INTERFACE_H_
