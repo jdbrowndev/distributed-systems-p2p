@@ -18,6 +18,7 @@ namespace brown {
 	static const int PORT_MAXIMUM = 65535;
 }
 extern pthread_mutex_t neighborsMutex;
+extern pthread_mutex_t filesMutex;
 extern std::vector<std::string> neighbors;
 extern void initGlobals();
 

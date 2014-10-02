@@ -1,6 +1,6 @@
 all: bin/main
-bin/main: bin/main.o bin/server_connection.o bin/request_handler.o bin/worker_thread.o bin/client_interface.o bin/client_connection.o bin/network_connection.o bin/service_request.o bin/globals.o
-	g++ bin/main.o bin/server_connection.o bin/request_handler.o bin/worker_thread.o bin/client_interface.o bin/client_connection.o bin/network_connection.o bin/service_request.o bin/globals.o -lpthread -o bin/main
+bin/main: bin/main.o bin/server_connection.o bin/request_handler.o bin/worker_thread.o bin/client_interface.o bin/client_connection.o bin/network_connection.o bin/service_request.o bin/file_manager.o bin/globals.o
+	g++ bin/main.o bin/server_connection.o bin/request_handler.o bin/worker_thread.o bin/client_interface.o bin/client_connection.o bin/network_connection.o bin/service_request.o bin/file_manager.o bin/globals.o -lpthread -o bin/main
 bin/main.o: src/main.cc src/server/server_connection.cc src/server/request_handler.cc src/client/client_interface.cc src/globals.cc src/service_request.cc
 	g++ -c -g src/main.cc -o bin/main.o
 bin/server_connection.o: src/server/server_connection.cc src/server/server_connection.h src/network_connection.cc src/globals.cc
@@ -19,6 +19,8 @@ bin/network_connection.o: src/network_connection.cc src/network_connection.h
 	g++ -c -g src/network_connection.cc -o bin/network_connection.o
 bin/service_request.o: src/service_request.cc src/service_request.h
 	g++ -c -g src/service_request.cc -o bin/service_request.o
+bin/file_manager.o: src/file_manager.cc src/file_manager.h src/globals.cc
+	g++ -c -g src/file_manager.cc -o bin/file_manager.o
 clean:
 	rm bin/*.o
 	rm bin/main
