@@ -16,7 +16,6 @@ namespace brown {
 	static const int PORT_MAX_LENGTH = 5;
 	static const int PORT_MINIMUM = 1024;
 	static const int PORT_MAXIMUM = 65535;
-	static const char* DOMAIN_NAME = "einstein.etsu.edu";
 }
 extern pthread_mutex_t neighborsMutex;
 extern std::vector<std::string> neighbors;

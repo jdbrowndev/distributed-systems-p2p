@@ -19,7 +19,7 @@
 #include "client_connection.h"
 
 namespace brown {
-	client_connection::client_connection(char* serverName, char* port):host(host),
+	client_connection::client_connection(char* host, char* port):host(host),
 			port(port) { }
 
 	void client_connection::openConnection() {
@@ -30,7 +30,6 @@ namespace brown {
 		connection = connect(socketdesc, myinfo->ai_addr, myinfo->ai_addrlen);
 		if (connection < 0) {
 			std::cout << "Client: Error in connect" << std::endl;
-			exit(0);
 		}
 	}
 

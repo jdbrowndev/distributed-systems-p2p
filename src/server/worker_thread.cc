@@ -66,7 +66,7 @@ namespace brown {
 
 	void worker_thread::writeResponse() {
 		service_request response;
-		strncpy(response.domainName, DOMAIN_NAME, 256);
+		gethostname(response.domainName, sizeof(response.domainName));
 		response.portNumber = port;
 		response.requestType = 3;
 		strncpy(response.requestString, "", 1);
