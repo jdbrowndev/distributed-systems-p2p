@@ -128,7 +128,7 @@ namespace brown {
 
 	bool client_interface::isValidHostAndPort(char* hostAndPort) {
 		regex_t hostAndPortRegex;
-		regcomp(&hostAndPortRegex, "[a-zA-Z]+:[0-9]+", REG_EXTENDED);
+		regcomp(&hostAndPortRegex, "^[-a-zA-Z0-9\\/\\.]+:[0-9]+$", REG_EXTENDED);
 		return regexec(&hostAndPortRegex, hostAndPort, 0, NULL, 0) == 0;
 	}
 
