@@ -26,51 +26,109 @@ namespace brown {
 
 	void worker_thread::handleRequests() {
 		while(!exit) {
-			readRequest();
-			writeResponse();
+			read(connection, (char*)&request, sizeof(service_request));
+			if(client.length() == 0) { buildClientString(); }
+			handleRequest();
 		}
 		close(connection);
 	}
 
-	void worker_thread::readRequest() {
-		read(connection, (char*)&request, sizeof(service_request));
-		std::stringstream strStream;
-		strStream << request.domainName << ":" << request.portNumber;
-		std::string client = strStream.str();
-		strStream.str(std::string()); // clear stream
-		bool newNeighbor = false;
+	void worker_thread::handleRequest() {
 		switch(request.requestType) {
 			case 0:
-				// new client connection
-				strStream << "Server: Received request from new client " << client << std::endl;
+				handleNewClientRequest();
 				break;
 			case 1:
-				// client exiting
-				newNeighbor = std::find(neighbors.begin(), neighbors.end(), client) == neighbors.end();
-				if(newNeighbor) {
-					appendToNeighborsVector(client);
-					appendToNeighborsFile(client);
-				}
-				strStream << "Server: Received exit request from client " << client << std::endl;
-				exit = true;
+				handleClientExitRequest();
 				break;
 			case 2:
-				// client query
-				strStream << "Server: Received query request from " << client << std::endl;
+				handleClientQueryRequest();
+				break;
+			case 4:
+				handleClientShareRequest();
 				break;
 		}
-		std::cout << strStream.str();
 	}
 
-	void worker_thread::writeResponse() {
+	void worker_thread::handleNewClientRequest() {
+		std::cout << "Server: Received request from new client " << client << std::endl;
+		writeResponse((char*)"", (char*)"");
+	}
+
+	void worker_thread::handleClientExitRequest() {
+		tryAppendNeighbor(client);
+		std::cout << "Server: Received exit request from client " << client << std::endl;
+		exit = true;
+		writeResponse((char*)"", (char*)"");
+	}
+
+	void worker_thread::handleClientQueryRequest() {
+		if(strcasecmp(request.requestString, "ping") == 0) {
+			std::cout << "Server: Received ping request from " << client
+					<< ". Responding with \"alive\"" << std::endl;
+			writeResponse((char*)"alive", (char*)"");
+		} else if(strcasecmp(request.requestString, "lookup") == 0) {
+			// TODO: perform file lookup, reply "found" or "not found" with optional payload
+		} else {
+			std::cout << "Server: Received query request from " << client
+					<< ". Sending empty response." << std::endl;
+			writeResponse((char*)"", (char*)"");
+		}
+	}
+
+	void worker_thread::handleClientShareRequest() {
+		if(strcasecmp(request.requestString, "neighbors") == 0) {
+			std::cout << "Server: Received neighbor share request from " << client << std::endl;
+			appendSharedNeighbors();
+			printNeighbors();
+			writeResponse((char*)"thanks", (char*)"");
+		} else {
+			std::cout << "Server: Received neighbor share request from " << client
+					<< ", but it is missing some information. Responding with \"error\"" << std::endl;
+			writeResponse((char*)"", (char*)"");
+		}
+	}
+
+	void worker_thread::writeResponse(char* requestString, char* payload) {
 		service_request response;
 		gethostname(response.domainName, sizeof(response.domainName));
 		response.portNumber = port;
 		response.requestType = 3;
-		strncpy(response.requestString, "", 1);
+		strcpy(response.requestString, requestString);
 		response.requestId = 0;
-		strncpy(response.payload, "", 1);
+		strcpy(response.payload, payload);
 		write(connection, (char*)&response, sizeof(service_request));
-		std::cout << "Server: Response sent to " << request.domainName << ":" << request.portNumber << std::endl;
+		std::cout << "Server: Response sent to " << client << std::endl;
+	}
+
+	void worker_thread::buildClientString() {
+		std::stringstream strStream;
+		strStream << request.domainName << ":" << request.portNumber;
+		client = strStream.str();
+	}
+
+	void worker_thread::appendSharedNeighbors() {
+		int neighborPairCount = atoi(strtok(request.payload, ";"));
+		std::stringstream strStream;
+		for(int i = 1; i <= neighborPairCount; i++) {
+			char* host = strtok(NULL, ";");
+			char* port = strtok(NULL, ";");
+			strStream << host << ":" << port;
+			std::string neighbor = strStream.str();
+			if(!tryAppendNeighbor(neighbor)) {
+				std::cout << "Server: cannot add " << neighbor << " to neighbors list: "
+						<< neighbor << " is already in the list" << std::endl;
+			}
+			strStream.str("");
+		}
+	}
+
+	bool worker_thread::tryAppendNeighbor(std::string neighbor) {
+		if(std::find(neighbors.begin(), neighbors.end(), neighbor) == neighbors.end()) {
+			appendToNeighborsVector(neighbor);
+			appendToNeighborsFile(neighbor);
+			return true;
+		}
+		return false;
 	}
 }

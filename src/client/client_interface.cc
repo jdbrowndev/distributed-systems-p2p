@@ -97,18 +97,6 @@ namespace brown {
 		std::cout << strStream.str();
 	}
 
-	void client_interface::printNeighbors() {
-		std::stringstream strStream;
-		strStream << "Neighbors: " << std::endl;
-		for(std::vector<std::string>::iterator i = neighbors.begin(); i != neighbors.end(); i++) {
-			for(int spaces = 1; spaces <= NEIGHBORS_LIST_INDENT; spaces++) {
-				strStream << " ";
-			}
-			strStream << *i << std::endl;
-		}
-		std::cout << strStream.str();
-	}
-
 	void client_interface::runQuery(char* args) {
 		char* host = strtok(args, ":");
 		char* port = strtok(NULL, ":");

@@ -18,7 +18,6 @@ namespace brown {
 	private:
 		const static int COMMAND_LIST_INDENT = 3;
 		const static int COMMAND_LIST_SPACING = 8;
-		const static int NEIGHBORS_LIST_INDENT = 3;
 		char* port;
 		std::string command;
 		std::map<std::string, std::string> commands;
@@ -27,7 +26,6 @@ namespace brown {
 		void parseCommand();
 		void printWelcomeMessage();
 		void printCommands();
-		void printNeighbors();
 		void runQuery(char* args);
 		bool isQuery(char* str);
 		bool isValidHostAndPort(char* hostAndPort);

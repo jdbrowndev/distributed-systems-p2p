@@ -25,5 +25,6 @@ extern brown::file_manager fileManager;
 extern void initGlobals();
 extern void appendToNeighborsVector(std::string neighbor);
 extern void appendToNeighborsFile(std::string neighbor);
+extern void printNeighbors();
 
 #endif /* GLOBALS_H_ */

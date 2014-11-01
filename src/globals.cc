@@ -38,3 +38,17 @@ void appendToNeighborsFile(std::string neighbor) {
 		fileManager.closeNeighborsFile();
 	pthread_mutex_unlock(&neighborsFileMutex);
 }
+
+void printNeighbors() {
+	std::cout << "Neighbors:" << std::endl;
+	const int indent = 3;
+	int count = 1;
+	for(std::vector<std::string>::iterator it = neighbors.begin();
+			it != neighbors.end(); it++) {
+		for(int i = 1; i <= indent; i++) {
+			std::cout << " ";
+		}
+		std::cout << count << ". " << *it << std::endl;
+		count++;
+	}
+}

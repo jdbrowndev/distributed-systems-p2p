@@ -9,6 +9,7 @@
 #ifndef WORKER_THREAD_H_
 #define WORKER_THREAD_H_
 
+#include <string>
 #include "../service_request.h"
 
 namespace brown {
@@ -17,9 +18,17 @@ namespace brown {
 		int connection;
 		int port;
 		service_request request;
+		std::string client;
 		bool exit;
-		void readRequest();
-		void writeResponse();
+		void handleRequest();
+		void handleNewClientRequest();
+		void handleClientExitRequest();
+		void handleClientQueryRequest();
+		void handleClientShareRequest();
+		void writeResponse(char* requestString, char* payload);
+		void buildClientString();
+		void appendSharedNeighbors();
+		bool tryAppendNeighbor(std::string neighbor);
 	public:
 		worker_thread(int connection, int port);
 		void handleRequests();
