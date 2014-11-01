@@ -7,6 +7,7 @@
 // Handles file write/reads
 
 #include <string>
+#include <sstream>
 #include <fstream>
 #include "globals.h"
 #include "file_manager.h"
@@ -14,6 +15,7 @@
 namespace brown {
 	const char* file_manager::PORTNUMS_FILE_NAME = "config/portnums.txt";
 	const char* file_manager::NEIGHBORS_FILE_NAME = "config/neighbors.txt";
+	const char* file_manager::CONTENT_FILE_DIRECTORY = "content";
 
 	file_manager::file_manager() { }
 
@@ -58,5 +60,18 @@ namespace brown {
 		neighborsFile << neighbor;
 		neighborsFile << "\n";
 		return;
+	}
+
+	std::string file_manager::readContentFile(std::string fileName) {
+		std::string path = std::string(CONTENT_FILE_DIRECTORY) + "/" + fileName;
+		contentFile.open(path.c_str());
+		if(!contentFile) {
+			return "";
+		} else {
+			std::stringstream buffer;
+			buffer << contentFile.rdbuf();
+			contentFile.close();
+			return buffer.str();
+		}
 	}
 }

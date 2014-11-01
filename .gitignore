@@ -4,3 +4,5 @@ bin/*.o
 bin/main
 config/*
 !config/empty
+content/*
+!content/empty

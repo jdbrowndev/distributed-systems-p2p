@@ -64,11 +64,22 @@ namespace brown {
 
 	void worker_thread::handleClientQueryRequest() {
 		if(strcasecmp(request.requestString, "ping") == 0) {
-			std::cout << "Server: Received ping request from " << client
+			std::cout << "Server: Received ping request from client " << client
 					<< ". Responding with \"alive\"" << std::endl;
 			writeResponse((char*)"alive", (char*)"");
 		} else if(strcasecmp(request.requestString, "lookup") == 0) {
-			// TODO: perform file lookup, reply "found" or "not found" with optional payload
+			std::cout << "Server: Received request for content file \"" << request.payload
+					<< "\" from client " << client << std::endl;
+			std::string fileContents = fileManager.readContentFile(std::string(request.payload));
+			if(fileContents.length() > 0) {
+				std::cout << "Server: Found content file \"" << request.payload
+						<< "\" for client " << client << std::endl;
+				writeResponse((char*)"found", (char*)fileContents.c_str());
+			} else {
+				std::cout << "Server: Could not find content file \"" << request.payload
+						<< "\" for client " << client << std::endl;
+				writeResponse((char*)"not found", (char*)"");
+			}
 		} else {
 			std::cout << "Server: Received query request from " << client
 					<< ". Sending empty response." << std::endl;
@@ -78,12 +89,12 @@ namespace brown {
 
 	void worker_thread::handleClientShareRequest() {
 		if(strcasecmp(request.requestString, "neighbors") == 0) {
-			std::cout << "Server: Received neighbor share request from " << client << std::endl;
+			std::cout << "Server: Received neighbor share request from client " << client << std::endl;
 			appendSharedNeighbors();
 			printNeighbors();
 			writeResponse((char*)"thanks", (char*)"");
 		} else {
-			std::cout << "Server: Received neighbor share request from " << client
+			std::cout << "Server: Received neighbor share request from client " << client
 					<< ", but it is missing some information. Responding with \"error\"" << std::endl;
 			writeResponse((char*)"", (char*)"");
 		}
