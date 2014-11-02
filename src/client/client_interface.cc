@@ -22,8 +22,9 @@
 namespace brown {
 	client_interface::client_interface(char* port): port(port) {
 		commands["exit"] = "Exits the client interface but leaves the server running";
-		commands["list"] = "Lists all neighbors available to query";
+		commands["list"] = "Lists all known neighbors";
 		commands["query"] = "Queries a neighbor";
+		commands["share"] = "Shares up to 3 known neighbors with a neighbor";
 	}
 
 	void client_interface::initialize() {
