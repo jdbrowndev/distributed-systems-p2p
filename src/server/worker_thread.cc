@@ -96,7 +96,7 @@ namespace brown {
 		} else {
 			std::cout << "Server: Received neighbor share request from client " << client
 					<< ", but it is missing some information. Responding with \"error\"" << std::endl;
-			writeResponse((char*)"", (char*)"");
+			writeResponse((char*)"error", (char*)"");
 		}
 	}
 
