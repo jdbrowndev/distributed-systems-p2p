@@ -14,6 +14,7 @@
 #include "file_manager.h"
 
 namespace brown {
+	static const int HOST_MAX_LENGTH = 255;
 	static const int PORT_MAX_LENGTH = 5;
 	static const int PORT_MINIMUM = 1024;
 	static const int PORT_MAXIMUM = 65535;

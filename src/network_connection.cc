@@ -32,10 +32,11 @@ namespace brown {
 		}
 	}
 
-	void network_connection::setAddressInfo(char* host, char* port) {
+	bool network_connection::setAddressInfo(char* host, char* port) {
 		if (getaddrinfo(host, port, NULL, &myinfo) != 0) {
 			std::cout << "client_connection: Error getting address" << std::endl;
-			exit(0);
+			return false;
 		}
+		return true;
 	}
 }

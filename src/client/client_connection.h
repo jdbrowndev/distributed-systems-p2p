@@ -27,9 +27,11 @@ namespace brown {
 		int connection;
 	public:
 		client_connection(char* host, char* port);
-		void openConnection();
+		bool openConnection();
 		void closeConnection();
 		service_request sendRequest(service_request request);
+		void printRequestMessage(service_request request);
+		void printResponseMessage(service_request response);
 	};
 }
 

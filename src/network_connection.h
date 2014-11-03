@@ -24,7 +24,7 @@ namespace brown {
 		addrinfo* myinfo;
 		network_connection();
 		void openSocket();
-		void setAddressInfo(char* host, char* port);
+		bool setAddressInfo(char* host, char* port);
 	};
 }
 

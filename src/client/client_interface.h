@@ -11,6 +11,7 @@
 
 #include <map>
 #include <string>
+#include "client_connection.h"
 #include "../service_request.h"
 
 namespace brown {
@@ -18,19 +19,33 @@ namespace brown {
 	private:
 		const static int COMMAND_LIST_INDENT = 3;
 		const static int COMMAND_LIST_SPACING = 8;
+		const static int FILE_NAME_MAX_LENGTH = 12;
 		char* port;
 		std::string command;
+		int neighborId;
+		client_connection* connection;
+		std::string server;
+		char fileName[FILE_NAME_MAX_LENGTH+1];
 		std::map<std::string, std::string> commands;
 		void promptForNeighbor();
 		void promptCommand();
 		void parseCommand();
 		void printWelcomeMessage();
 		void printCommands();
-		void runQuery(char* args);
+		void handleQueryCommand();
+		void handleShareCommand();
+		void runPingQuery();
+		void runLookupQuery();
+		void runShareQuery();
 		bool isQuery(char* str);
-		bool isValidHostAndPort(char* hostAndPort);
-		bool isNeighbor(char* neighbor);
-		service_request createServiceRequest(int requestType);
+		bool isShare(char* str);
+		void instantiateConnection();
+		bool isNeighbor(int neighborID);
+		service_request createServiceRequest(int requestType, char* requestString, char* payload);
+		std::string createSharePayload();
+		void printQueryUsage();
+		void printShareUsage();
+		void resetVariables();
 	public:
 		client_interface(char* port);
 		void initialize();
