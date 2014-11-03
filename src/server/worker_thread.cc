@@ -127,7 +127,7 @@ namespace brown {
 			strStream << host << ":" << port;
 			std::string neighbor = strStream.str();
 			if(!tryAppendNeighbor(neighbor)) {
-				std::cout << "Server: cannot add " << neighbor << " to neighbors list: "
+				std::cout << "Server: Cannot add " << neighbor << " to neighbors list: "
 						<< neighbor << " is already in the list" << std::endl;
 			}
 			strStream.str("");
