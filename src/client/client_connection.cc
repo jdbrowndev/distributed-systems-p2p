@@ -79,7 +79,7 @@ namespace brown {
 				break;
 			case 4:
 				std::cout << "Client: Sent share request (type 4) to " << host << ":"
-					<< "port" << std::endl;
+					<< port << std::endl;
 				break;
 		}
 	}

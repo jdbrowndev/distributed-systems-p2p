@@ -27,14 +27,14 @@ namespace brown {
 	void network_connection::openSocket() {
 		socketdesc = socket(AF_INET, SOCK_STREAM, 0);
 		if (socketdesc < 0) {
-			std::cout << "network_connection: Error creating socket" << std::endl;
+			std::cout << "Network: Error creating socket" << std::endl;
 			exit(0);
 		}
 	}
 
 	bool network_connection::setAddressInfo(char* host, char* port) {
 		if (getaddrinfo(host, port, NULL, &myinfo) != 0) {
-			std::cout << "client_connection: Error getting address" << std::endl;
+			std::cout << "Network: Error getting address" << std::endl;
 			return false;
 		}
 		return true;
