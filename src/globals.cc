@@ -4,10 +4,13 @@
 // Author: Jordan Brown
 // Date: Sep 4, 2014
 //
-// Stores global variables
+// Stores global variables and procedures
 
 #include <vector>
+#include <stdlib.h>
+#include <string.h>
 #include <string>
+#include <sstream>
 #include <iostream>
 #include <pthread.h>
 #include "globals.h"
@@ -51,4 +54,43 @@ void printNeighbors() {
 		std::cout << count << ". " << *it << std::endl;
 		count++;
 	}
+}
+
+std::string encodeNeighbors(std::vector<std::string> neighborsVector) {
+	return encodeNeighbors(neighborsVector, -1);
+}
+
+std::string encodeNeighbors(std::vector<std::string> neighborsVector, int max) {
+	if (neighborsVector.size() == 0) {
+		return "0";
+	} else {
+		std::stringstream outputStream;
+		int numNeighbors = (neighborsVector.size() <= max || max < 0) ? neighborsVector.size() : max;
+		outputStream << numNeighbors;
+		for(int i = 1; i <= numNeighbors; i++) {
+			std::string tmpString;
+			std::stringstream tmpStream(neighborsVector.at(i-1));
+			// Use getline(..) to tokenize host and port
+			// Then store tokens in outputStream
+			getline(tmpStream, tmpString, ':');
+			outputStream << ";" << tmpString << ";";
+			getline(tmpStream, tmpString, ':');
+			outputStream << tmpString;
+		}
+		return (char*)outputStream.str().c_str();
+	}
+}
+
+std::vector<std::string> decodeNeighbors(std::string neighborsString) {
+	std::vector<std::string> outputVector;
+	int neighborsCount = atoi(strtok((char*)neighborsString.c_str(), ";"));
+	std::stringstream strStream;
+	for(int i = 1; i <= neighborsCount; i++) {
+		char* host = strtok(NULL, ";");
+		char* port = strtok(NULL, ";");
+		strStream << host << ":" << port;
+		outputVector.push_back(strStream.str());
+		strStream.str("");
+	}
+	return outputVector;
 }

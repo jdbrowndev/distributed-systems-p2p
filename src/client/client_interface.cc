@@ -169,7 +169,7 @@ namespace brown {
 			myConnection.sendRequest(createServiceRequest(0, (char*)"", (char*)""));
 			myConnection.sendRequest(createServiceRequest(2, (char*)"ping", (char*)""));
 			myConnection.sendRequest(createServiceRequest(4, (char*)"neighbors",
-					(char*)createSharePayload().c_str()));
+					(char*)encodeNeighbors(neighbors, MAX_NEIGHBORS_TO_SHARE).c_str()));
 			printNeighbors();
 			myConnection.sendRequest(createServiceRequest(1, (char*)"", (char*)""));
 			myConnection.closeConnection();
@@ -211,26 +211,6 @@ namespace brown {
 		strncpy(request.requestString, requestString, sizeof(request.requestString));
 		strncpy(request.payload, payload, sizeof(request.payload));
 		return request;
-	}
-	
-	std::string client_interface::createSharePayload() {
-		std::stringstream payloadBuilder;
-		std::string strNeighbor;
-		std::string separator = ";";
-		int payloadSize;
-		payloadSize = neighbors.size() >= 3 ? 3 : neighbors.size();
-		payloadBuilder << payloadSize;
-		for (int i = 0; i < payloadSize; i++) {
-			payloadBuilder << separator;
-			strNeighbor = neighbors.at(i).c_str();
-			payloadBuilder << strtok((char*)strNeighbor.c_str(), ":");
-			payloadBuilder << separator;
-			payloadBuilder << strtok(NULL, ":");
-		}
-		std::string payload = payloadBuilder.str();
-		std::cout << "Client: Preparing to share neighbors: "
-				<< payload << std::endl;
-		return payload;
 	}
 
 	void client_interface::printQueryUsage() {

@@ -119,18 +119,14 @@ namespace brown {
 	}
 
 	void worker_thread::appendSharedNeighbors() {
-		int neighborPairCount = atoi(strtok(request.payload, ";"));
-		std::stringstream strStream;
-		for(int i = 1; i <= neighborPairCount; i++) {
-			char* host = strtok(NULL, ";");
-			char* port = strtok(NULL, ";");
-			strStream << host << ":" << port;
-			std::string neighbor = strStream.str();
+		std::vector<std::string> sharedNeighbors = decodeNeighbors(request.payload);
+		for(std::vector<std::string>::iterator it = sharedNeighbors.begin();
+				it != sharedNeighbors.end(); it++) {
+			std::string neighbor = *it;
 			if(!tryAppendNeighbor(neighbor)) {
 				std::cout << "Server: Cannot add " << neighbor << " to neighbors list: "
 						<< neighbor << " is already in the list" << std::endl;
 			}
-			strStream.str("");
 		}
 	}
 

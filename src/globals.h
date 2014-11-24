@@ -27,5 +27,8 @@ extern void initGlobals();
 extern void appendToNeighborsVector(std::string neighbor);
 extern void appendToNeighborsFile(std::string neighbor);
 extern void printNeighbors();
+extern std::string encodeNeighbors(std::vector<std::string> neighborsVector);
+extern std::string encodeNeighbors(std::vector<std::string> neighborsVector, int max);
+extern std::vector<std::string> decodeNeighbors(std::string neighborsString);
 
 #endif /* GLOBALS_H_ */
