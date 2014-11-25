@@ -18,6 +18,7 @@ namespace brown {
 		char requestString[32];
 		int requestId;
 		char payload[256];
+		char visited[256]; // This will hold ~10 neighbors; increase capacity if more nodes exist in the network
 	};
 }
 

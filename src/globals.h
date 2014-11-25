@@ -19,6 +19,10 @@ namespace brown {
 	static const int PORT_MINIMUM = 1024;
 	static const int PORT_MAXIMUM = 65535;
 }
+struct host_port_tokens {
+	std::string host;
+	std::string port;
+};
 extern pthread_mutex_t neighborsMutex;
 extern pthread_mutex_t neighborsFileMutex;
 extern std::vector<std::string> neighbors;
@@ -30,5 +34,6 @@ extern void printNeighbors();
 extern std::string encodeNeighbors(std::vector<std::string> neighborsVector);
 extern std::string encodeNeighbors(std::vector<std::string> neighborsVector, int max);
 extern std::vector<std::string> decodeNeighbors(std::string neighborsString);
+extern host_port_tokens splitNeighbor(std::string neighbor);
 
 #endif /* GLOBALS_H_ */

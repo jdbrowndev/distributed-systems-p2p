@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <regex.h>
 #include "client_connection.h"
+#include "../graph_traversal.h"
 #include "../globals.h"
 #include "../service_request.h"
 #include "client_interface.h"
@@ -64,7 +65,7 @@ namespace brown {
 		if(strcasecmp(command.c_str(), "help") == 0) {
 			printCommands();
 		} else if(strcasecmp(command.c_str(), "list") == 0) {
-			printNeighbors();
+			runSystemQuery(); // DO NOT COMMIT THIS!
 		} else if(isQuery((char*)command.c_str())) {
 			handleQueryCommand();
 		} else if(isShare((char*)command.c_str())) {
@@ -176,6 +177,43 @@ namespace brown {
 		}
 	}
 	
+	void client_interface::runSystemQuery() {
+		runSystemQuery("");
+	}
+
+	void client_interface::runSystemQuery(std::string fileName) {
+		graph_traversal traversal(atoi(port));
+		// Put my host:port into the initial visited list
+		char domainName[256];
+		gethostname(domainName, sizeof(domainName));
+		std::stringstream strStream;
+		strStream << domainName << ":" << port;
+		std::vector<std::string> initialVisited;
+		initialVisited.push_back(strStream.str());
+		// Traverse and get result
+		graph_traversal_result result = traversal.traverse(initialVisited, fileName);
+		// If the query is a system-wide ping, print the results
+		if(fileName.compare("") == 0) {
+			printSystemQueryNodes(result.visited);
+		// Else, if the query is system-wide file lookup, print not found if
+	    // no file was found (note: if file was found, client_connection.cc will
+		// print the contents automatically
+		} else if(result.fileContents.length() == 0) {
+			std::cout << "Client: Could not find content file \"" << fileName << "\" in the system"
+					<< std::endl;
+		}
+	}
+
+	void client_interface::printSystemQueryNodes(std::vector<std::string> nodesFound) {
+		std::cout << std::endl << "=============" << std::endl;
+		std::cout << "Network Nodes" << std::endl;
+		std::cout << "=============" << std::endl;
+		for(std::vector<std::string>::iterator it = nodesFound.begin();
+				it != nodesFound.end(); it++) {
+			std::cout << *it << std::endl;
+		}
+	}
+
 	void client_interface::instantiateConnection() {
 		server = neighbors.at(neighborId-1);
 		std::string neighbor = server.c_str(); // c_str() forces a deep copy
@@ -210,6 +248,7 @@ namespace brown {
 		request.requestType = requestType;
 		strncpy(request.requestString, requestString, sizeof(request.requestString));
 		strncpy(request.payload, payload, sizeof(request.payload));
+		strncpy(request.visited, "", sizeof(request.visited));
 		return request;
 	}
 

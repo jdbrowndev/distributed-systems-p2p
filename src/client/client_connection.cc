@@ -17,6 +17,7 @@
 #include <iostream>
 #include "../network_connection.h"
 #include "../service_request.h"
+#include "../globals.h"
 #include "client_connection.h"
 
 namespace brown {
@@ -81,6 +82,15 @@ namespace brown {
 				std::cout << "Client: Sent share request (type 4) to " << host << ":"
 					<< port << std::endl;
 				break;
+			case 5:
+				if(strcasecmp(request.requestString, "lookup") == 0) {
+					std::cout << "Client: Sent system lookup request (type 5) for content file \""
+							<< request.payload << "\" to "
+							<< host << ":" << port << std::endl;
+				} else {
+					std::cout << "Client: Sent system ping request (type 5) to " << host << ":"
+						<< port << std::endl;
+				}
 		}
 	}
 
@@ -89,6 +99,13 @@ namespace brown {
 			std::cout << "Client: Received response (type 3) with message \""
 					<< response.requestString << "\" from " << host << ":" << port
 					<< std::endl;
+			// If found, print special found message (system-wide lookups only)
+			if(strcasecmp(response.requestString, "found") == 0 && strlen(response.visited) > 0) {
+				std::vector<std::string> visited = decodeNeighbors(response.visited);
+				std::cout << "Client: File found on node " << visited.at(visited.size()-1)
+						<< " (" << visited.size()-1 << " node(s) searched)" << std::endl;
+			}
+			// If found, print file contents (any lookup)
 			if(strcasecmp(response.requestString, "found") == 0) {
 				std::cout << "Client: File contents:" << std::endl << std::endl
 						<< response.payload << std::endl;

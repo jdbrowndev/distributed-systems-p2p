@@ -17,9 +17,10 @@
 #include <vector>
 #include <sstream>
 #include <algorithm>
-#include "worker_thread.h"
+#include "../graph_traversal.h"
 #include "../globals.h"
 #include "../service_request.h"
+#include "worker_thread.h"
 
 namespace brown {
 	worker_thread::worker_thread(int connection, int port):connection(connection), port(port), exit(false) { }
@@ -47,6 +48,8 @@ namespace brown {
 			case 4:
 				handleClientShareRequest();
 				break;
+			case 5:
+				handleClientSystemQueryRequest();
 		}
 	}
 
@@ -100,14 +103,46 @@ namespace brown {
 		}
 	}
 
+	void worker_thread::handleClientSystemQueryRequest() {
+		bool isFileQuery = strcasecmp(request.requestString, "lookup") == 0;
+		if(isFileQuery) {
+			std::cout << "Server: Received system lookup request for content file \"" << request.payload
+					<< "\" from client " << client << std::endl;
+		} else {
+			std::cout << "Server: Received system ping request from client " << client << std::endl;
+		}
+		std::string fileContents = isFileQuery ? fileManager.readContentFile(std::string(request.payload)) : "";
+		if(fileContents.length() > 0) {
+			std::cout << "Server: Found content file \"" << request.payload
+					<< "\" for client " << client << std::endl;
+			writeResponse((char*)"found", (char*)fileContents.c_str(), request.visited);
+		} else {
+			graph_traversal traversal(port);
+			graph_traversal_result result = traversal.traverse(decodeNeighbors(request.visited),
+					std::string(request.payload));
+			if(result.fileContents.length() > 0) {
+				writeResponse((char*)"found", (char*)result.fileContents.c_str(),
+						(char*)encodeNeighbors(result.visited).c_str());
+			} else {
+				writeResponse(isFileQuery ? (char*)"not found" : (char*)"", (char*)"",
+						(char*)encodeNeighbors(result.visited).c_str());
+			}
+		}
+	}
+
 	void worker_thread::writeResponse(char* requestString, char* payload) {
+		writeResponse(requestString, payload, (char*)"");
+	}
+
+	void worker_thread::writeResponse(char* requestString, char* payload, char* visited) {
 		service_request response;
 		gethostname(response.domainName, sizeof(response.domainName));
 		response.portNumber = port;
 		response.requestType = 3;
-		strcpy(response.requestString, requestString);
 		response.requestId = 0;
-		strcpy(response.payload, payload);
+		strncpy(response.requestString, requestString, sizeof(response.requestString));
+		strncpy(response.payload, payload, sizeof(response.payload));
+		strncpy(response.visited, visited, sizeof(response.visited));
 		write(connection, (char*)&response, sizeof(service_request));
 		std::cout << "Server: Response sent to " << client << std::endl;
 	}

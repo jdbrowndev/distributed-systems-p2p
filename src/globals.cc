@@ -68,14 +68,8 @@ std::string encodeNeighbors(std::vector<std::string> neighborsVector, int max) {
 		int numNeighbors = (neighborsVector.size() <= max || max < 0) ? neighborsVector.size() : max;
 		outputStream << numNeighbors;
 		for(int i = 1; i <= numNeighbors; i++) {
-			std::string tmpString;
-			std::stringstream tmpStream(neighborsVector.at(i-1));
-			// Use getline(..) to tokenize host and port
-			// Then store tokens in outputStream
-			getline(tmpStream, tmpString, ':');
-			outputStream << ";" << tmpString << ";";
-			getline(tmpStream, tmpString, ':');
-			outputStream << tmpString;
+			host_port_tokens neighborTokens = splitNeighbor(neighborsVector.at(i-1));
+			outputStream << ";" << neighborTokens.host << ";" << neighborTokens.port;
 		}
 		return (char*)outputStream.str().c_str();
 	}
@@ -93,4 +87,12 @@ std::vector<std::string> decodeNeighbors(std::string neighborsString) {
 		strStream.str("");
 	}
 	return outputVector;
+}
+
+host_port_tokens splitNeighbor(std::string neighbor) {
+	host_port_tokens output;
+	std::stringstream stringStr(neighbor);
+	getline(stringStr, output.host, ':');
+	getline(stringStr, output.port, ':');
+	return output;
 }

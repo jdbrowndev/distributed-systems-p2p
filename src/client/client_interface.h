@@ -38,6 +38,9 @@ namespace brown {
 		void runPingQuery();
 		void runLookupQuery();
 		void runShareQuery();
+		void runSystemQuery();
+		void runSystemQuery(std::string fileName);
+		void printSystemQueryNodes(std::vector<std::string> nodesFound);
 		bool isQuery(char* str);
 		bool isShare(char* str);
 		void instantiateConnection();
