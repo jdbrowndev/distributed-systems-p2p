@@ -50,6 +50,7 @@ namespace brown {
 				break;
 			case 5:
 				handleClientSystemQueryRequest();
+				break;
 		}
 	}
 
@@ -67,8 +68,7 @@ namespace brown {
 
 	void worker_thread::handleClientQueryRequest() {
 		if(strcasecmp(request.requestString, "ping") == 0) {
-			std::cout << "Server: Received ping request from client " << client
-					<< ". Responding with \"alive\"" << std::endl;
+			std::cout << "Server: Received ping request from client " << client << std::endl;
 			writeResponse((char*)"alive", (char*)"");
 		} else if(strcasecmp(request.requestString, "lookup") == 0) {
 			std::cout << "Server: Received request for content file \"" << request.payload
@@ -84,8 +84,7 @@ namespace brown {
 				writeResponse((char*)"not found", (char*)"");
 			}
 		} else {
-			std::cout << "Server: Received query request from " << client
-					<< ". Sending empty response." << std::endl;
+			std::cout << "Server: Received query request from " << client << std::endl;
 			writeResponse((char*)"", (char*)"");
 		}
 	}
@@ -98,7 +97,7 @@ namespace brown {
 			writeResponse((char*)"thanks", (char*)"");
 		} else {
 			std::cout << "Server: Received neighbor share request from client " << client
-					<< ", but it is missing some information. Responding with \"error\"" << std::endl;
+					<< ", but it is missing some information" << std::endl;
 			writeResponse((char*)"error", (char*)"");
 		}
 	}
@@ -144,7 +143,12 @@ namespace brown {
 		strncpy(response.payload, payload, sizeof(response.payload));
 		strncpy(response.visited, visited, sizeof(response.visited));
 		write(connection, (char*)&response, sizeof(service_request));
-		std::cout << "Server: Response sent to " << client << std::endl;
+		if(strlen(requestString) > 0) {
+			std::cout << "Server: Response with message \"" << requestString << "\" sent to "
+					<< client << std::endl;
+		} else {
+			std::cout << "Server: Response sent to " << client << std::endl;
+		}
 	}
 
 	void worker_thread::buildClientString() {
