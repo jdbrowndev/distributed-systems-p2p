@@ -65,7 +65,7 @@ namespace brown {
 		if(strcasecmp(command.c_str(), "help") == 0) {
 			printCommands();
 		} else if(strcasecmp(command.c_str(), "list") == 0) {
-			runSystemQuery(); // DO NOT COMMIT THIS!
+			printVectorStrings(neighbors, "Neighbors", true);
 		} else if(isQuery((char*)command.c_str())) {
 			handleQueryCommand();
 		} else if(isShare((char*)command.c_str())) {
@@ -171,7 +171,6 @@ namespace brown {
 			myConnection.sendRequest(createServiceRequest(2, (char*)"ping", (char*)""));
 			myConnection.sendRequest(createServiceRequest(4, (char*)"neighbors",
 					(char*)encodeNeighbors(neighbors, MAX_NEIGHBORS_TO_SHARE).c_str()));
-			printNeighbors();
 			myConnection.sendRequest(createServiceRequest(1, (char*)"", (char*)""));
 			myConnection.closeConnection();
 		}
@@ -194,23 +193,13 @@ namespace brown {
 		graph_traversal_result result = traversal.traverse(initialVisited, fileName);
 		// If the query is a system-wide ping, print the results
 		if(fileName.compare("") == 0) {
-			printSystemQueryNodes(result.visited);
+			printVectorStrings(result.visited, "Network Nodes", false);
 		// Else, if the query is system-wide file lookup, print not found if
 	    // no file was found (note: if file was found, client_connection.cc will
 		// print the contents automatically
 		} else if(result.fileContents.length() == 0) {
 			std::cout << "Client: Could not find content file \"" << fileName << "\" in the system"
 					<< std::endl;
-		}
-	}
-
-	void client_interface::printSystemQueryNodes(std::vector<std::string> nodesFound) {
-		std::cout << std::endl << "=============" << std::endl;
-		std::cout << "Network Nodes" << std::endl;
-		std::cout << "=============" << std::endl;
-		for(std::vector<std::string>::iterator it = nodesFound.begin();
-				it != nodesFound.end(); it++) {
-			std::cout << *it << std::endl;
 		}
 	}
 

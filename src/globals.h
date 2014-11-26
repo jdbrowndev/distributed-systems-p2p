@@ -30,10 +30,10 @@ extern brown::file_manager fileManager;
 extern void initGlobals();
 extern void appendToNeighborsVector(std::string neighbor);
 extern void appendToNeighborsFile(std::string neighbor);
-extern void printNeighbors();
 extern std::string encodeNeighbors(std::vector<std::string> neighborsVector);
 extern std::string encodeNeighbors(std::vector<std::string> neighborsVector, int max);
 extern std::vector<std::string> decodeNeighbors(std::string neighborsString);
 extern host_port_tokens splitNeighbor(std::string neighbor);
+extern void printVectorStrings(std::vector<std::string> vector, std::string title, bool numbered);
 
 #endif /* GLOBALS_H_ */

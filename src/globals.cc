@@ -96,3 +96,31 @@ host_port_tokens splitNeighbor(std::string neighbor) {
 	getline(stringStr, output.port, ':');
 	return output;
 }
+
+void printVectorStrings(std::vector<std::string> vector, std::string title, bool numbered) {
+	const int padding = 5;
+	std::stringstream outputStr;
+	outputStr << "\n";
+	for(int i = 1; i <= title.length() + padding*2; i++) {
+		outputStr << "=";
+	}
+	outputStr << "\n";
+	for(int i = 1; i <= padding; i++) {
+		outputStr << " ";
+	}
+	outputStr << title << "\n";
+	for(int i = 1; i <= title.length() + padding*2; i++) {
+		outputStr << "=";
+	}
+	outputStr << "\n";
+	int counter = 1;
+	for(std::vector<std::string>::iterator it = vector.begin();
+			it != vector.end(); it++) {
+		if(numbered) {
+			outputStr << counter << ". ";
+			counter++;
+		}
+		outputStr << *it << "\n";
+	}
+	std::cout << outputStr.rdbuf();
+}

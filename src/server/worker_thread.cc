@@ -93,7 +93,6 @@ namespace brown {
 		if(strcasecmp(request.requestString, "neighbors") == 0) {
 			std::cout << "Server: Received neighbor share request from client " << client << std::endl;
 			appendSharedNeighbors();
-			printNeighbors();
 			writeResponse((char*)"thanks", (char*)"");
 		} else {
 			std::cout << "Server: Received neighbor share request from client " << client
