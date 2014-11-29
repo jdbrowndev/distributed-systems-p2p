@@ -23,7 +23,6 @@ std::string* loadPortNums();
 void loadNeighbors();
 void validateInput(char* lowPort, char* highPort);
 void* launchClientInterface(void* args);
-void isClientCommandArg (int argcount, server_connection serverConnection);
 
 int main(int argc, char** argv) {
 	std::string* portnums = loadPortNums();
@@ -37,7 +36,14 @@ int main(int argc, char** argv) {
 	server_connection serverConnection(atoi(lowPort), atoi(highPort));
 	serverConnection.openConnection();
 
-	isClientCommandArg(argc, serverConnection);
+	if(argc > 1) {
+		pthread_t clientInterfaceThread;
+		pthread_create(&clientInterfaceThread, NULL, launchClientInterface, (void*)serverConnection.getPort());
+	}
+	else {
+		std::cout << "No command line parameter specified, using server-only mode" << std::endl;
+		std::cout << "The server will continue running until manually terminated\n" << std::endl;
+	}
 	
 	request_handler handler(serverConnection.getSocketDesc(), serverConnection.getPort());
 	handler.serviceRequests();
@@ -86,15 +92,4 @@ void* launchClientInterface(void* args) {
 	interface.initialize();
 	pthread_exit(0);
 	return NULL;
-}
-
-void isClientCommandArg(int argcount, server_connection serverConnection) {
-	if(argcount > 1) {
-		pthread_t clientInterfaceThread;
-		pthread_create(&clientInterfaceThread, NULL, launchClientInterface, (void*)serverConnection.getPort());
-	}
-	else {
-		std::cout << "No command line parameter specified, using server-only mode" << std::endl;
-		std::cout << "The server will continue running until manually terminated" << std::endl;
-	}
 }

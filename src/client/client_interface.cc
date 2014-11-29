@@ -23,10 +23,10 @@
 namespace brown {
 	client_interface::client_interface(char* port): port(port), connection(NULL), neighborId(0) {
 		commands["exit"] = "Exits the client interface but leaves the server running";
-		commands["list"] = "Lists all known neighbors to this client or network";
-		commands["select"] = "Select neighbor ID from the neighbors list for future communication";
-		commands["file"] = "Query the selected neighbor or system for a file";
-		commands["share"] = "Shares up to 3 known neighbors with the selected neighbor node";
+		commands["list"] = "Lists all neighbors known to this client or all nodes in the system (-s flag)";
+		commands["select"] = "Selects a neighbor ID from the neighbors list for future communication";
+		commands["file"] = "Queries the selected neighbor or system (-s flag) for a file";
+		commands["share"] = "Shares up to 3 known neighbors with the selected neighbor";
 	}
 
 	void client_interface::initialize() {
@@ -276,22 +276,21 @@ namespace brown {
 	
 	void client_interface::printListUsage() {
 		std::cout << "Usage: list [-s]" << std::endl;
-		std::cout << "   -s = flag to list all neighbors in system." << std::endl;
-		std::cout << "Without -s, only client-known neighbors will be printed." << std::endl;
+		std::cout << "   -s = flag to list all nodes in system." << std::endl;
+		std::cout << "Without -s, only known neighbors will be printed." << std::endl;
 	}
 	
 	void client_interface::printSelectUsage() {
 		std::cout << "Usage: select neighbor-id" << std::endl;
 		std::cout << "   neighbor-id = ID of a neighbor to select (see 'list' command)." << std::endl;
-		std::cout << "A ping request will be sent to the neighbor with the selected ID." << std::endl;
+		std::cout << "A ping request will be sent to the neighbor associated with the selected ID." << std::endl;
 	}
 	
 	void client_interface::printFileUsage() {
 		std::cout << "Usage: file [-s] filename" << std::endl;
-		std::cout << "   -s = flag to search all neighbors in system." << std::endl;
+		std::cout << "   -s = flag to search all nodes in system." << std::endl;
 		std::cout << "   filename = File to search for." << std::endl;
-		std::cout << "File search will default to a selected neighbor if -s is not given." << std::endl;
-		std::cout << "A neighbor must be selected for the command to work correctly." << std::endl;
+		std::cout << "File search will default to the selected neighbor if -s is not given." << std::endl;
 	}
 
 	void client_interface::printShareUsage() {
