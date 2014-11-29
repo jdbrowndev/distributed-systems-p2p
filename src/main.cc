@@ -36,9 +36,14 @@ int main(int argc, char** argv) {
 	server_connection serverConnection(atoi(lowPort), atoi(highPort));
 	serverConnection.openConnection();
 
-	pthread_t clientInterfaceThread;
-	pthread_create(&clientInterfaceThread, NULL, launchClientInterface, (void*)serverConnection.getPort());
-
+	if(argc > 1) {
+		pthread_t clientInterfaceThread;
+		pthread_create(&clientInterfaceThread, NULL, launchClientInterface, (void*)serverConnection.getPort());
+	}
+	else {
+		std::cout << "No command line parameter specified, using server-only mode" << std::endl;
+		std::cout << "The server will continue running until manually terminated" << std:endl;
+	}
 	request_handler handler(serverConnection.getSocketDesc(), serverConnection.getPort());
 	handler.serviceRequests();
 }
