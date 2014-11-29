@@ -110,32 +110,6 @@ namespace brown {
 		} else {
 			printSelectUsage();
 		}
-		/*
-		if(neighborIdArg) { // old neighbor-id will be preserved if argument not given
-			int neighborIdTmp = atoi(neighborIdArg);
-			// handle case where file name is given, but neighbor-id is not
-			if(neighborIdTmp == 0 && (int)strlen(neighborIdArg) > 0
-					&& !(neighborIdArg[0] == '0' && (int)strlen(neighborIdArg) == 1)) {
-				fileNameTmp = neighborIdArg;
-			// else, assign neighbor-id
-			} else {
-				neighborId = neighborIdTmp;
-			}
-
-		}
-		if(!neighborIdArg && neighborId == 0) { // if neighbor-id has never been given
-			printQueryUsage();
-		} else if(!isNeighbor(neighborId)) {
-			std::cout << "Client: The ID you provided is not assigned to a neighbor." << std::endl;
-		} else if(fileNameTmp && (int)strlen(fileNameTmp) > 12) {
-			printQueryUsage();
-		} else if(fileNameTmp) {
-			strncpy(fileName, fileNameTmp, FILE_NAME_MAX_LENGTH);
-			runLookupQuery();
-		} else {
-			runPingQuery();
-		}
-		*/
 	}
 
 	void client_interface::handleFileCommand() {
