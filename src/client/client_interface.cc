@@ -23,9 +23,10 @@
 namespace brown {
 	client_interface::client_interface(char* port): port(port), connection(NULL), neighborId(0) {
 		commands["exit"] = "Exits the client interface but leaves the server running";
-		commands["list"] = "Lists all known neighbors";
-		commands["query"] = "Queries a neighbor";
-		commands["share"] = "Shares up to 3 known neighbors with a neighbor";
+		commands["list"] = "Lists all known neighbors to this client or network";
+		commands["select"] = "Select neighbor ID from the neighbors list for future communication";
+		commands["file"] = "Query the selected neighbor or system for a file";
+		commands["share"] = "Shares up to 3 known neighbors with the selected neighbor node";
 	}
 
 	void client_interface::initialize() {
@@ -64,10 +65,12 @@ namespace brown {
 	void client_interface::parseCommand() {
 		if(strcasecmp(command.c_str(), "help") == 0) {
 			printCommands();
-		} else if(strcasecmp(command.c_str(), "list") == 0) {
-			printVectorStrings(neighbors, "Neighbors", true);
-		} else if(isQuery((char*)command.c_str())) {
-			handleQueryCommand();
+		} else if(isList((char*)command.c_str())) {
+			handleListCommand();
+		} else if(isSelect((char*)command.c_str())) {
+			handleSelectCommand();
+		} else if(isFile((char*)command.c_str())) {
+			handleFileCommand();
 		} else if(isShare((char*)command.c_str())) {
 			handleShareCommand();
 		} else if(strcasecmp(command.c_str(), "exit") == 0) {
@@ -78,11 +81,36 @@ namespace brown {
 		}
 	}
 
-	void client_interface::handleQueryCommand() {
+	void client_interface::handleListCommand() {
+		char* cmd = strtok((char*)command.c_str(), " ");
+		char* systemFlag = strtok(NULL, " ");
+		
+		if(!systemFlag) {  //client-based list command
+			printVectorStrings(neighbors, "Neighbors", true);
+		} else if(strncmp(systemFlag, "-s", 2) == 0) { //system-based list command
+			runSystemQuery();
+		} else { //incorrect flag, print usage
+			printListUsage();
+		}
+	}
+	
+	void client_interface::handleSelectCommand() {
 		char* cmd = strtok((char*)command.c_str(), " ");
 		char* neighborIdArg = strtok(NULL, " ");
-		char* fileNameTmp = strtok(NULL, " ");
+		int neighborIdTmp;
 
+		if(neighborIdArg) {
+			neighborIdTmp = atoi(neighborIdArg);
+			if(!isNeighbor(neighborIdTmp)) {
+				std::cout << "Client: The ID you provided is not assigned to a neighbor." << std::endl;
+			} else {
+				neighborId = neighborIdTmp;
+				runPingQuery();
+			}
+		} else {
+			printSelectUsage();
+		}
+		/*
 		if(neighborIdArg) { // old neighbor-id will be preserved if argument not given
 			int neighborIdTmp = atoi(neighborIdArg);
 			// handle case where file name is given, but neighbor-id is not
@@ -107,19 +135,38 @@ namespace brown {
 		} else {
 			runPingQuery();
 		}
+		*/
 	}
 
+	void client_interface::handleFileCommand() {
+		char* cmd = strtok((char*)command.c_str(), " ");
+		char* systemFlag = strtok(NULL, " ");
+		char* fileNameTmp = strtok(NULL, " ");
+		
+		if(systemFlag) { //there is a second parameter
+			if(strncmp(systemFlag, "-s", 2) == 0) {  //system wide flag is given
+				if(fileNameTmp) {	//filename given, correct syntax
+					strncpy(fileName, fileNameTmp, FILE_NAME_MAX_LENGTH);
+					runSystemQuery(std::string(fileName));
+				} else {	//filename not given, incorrect syntax
+					printFileUsage();
+				}
+			} else if (!fileNameTmp && neighborId != 0) { //filename given, no system flag and a neighbor has been selected.
+				strncpy(fileName, systemFlag, FILE_NAME_MAX_LENGTH);
+				runLookupQuery();
+			} else {  //second parameter is unrecognized with filename, incorrect syntax
+				printFileUsage();
+			}
+		} else {
+			printFileUsage();
+		}
+	}
+	
 	void client_interface::handleShareCommand() {
 		char* cmd = strtok((char*)command.c_str(), " ");
-		char* neighborIdArg = strtok(NULL, " ");
 
-		if(neighborIdArg) { // old neighbor-id will be preserved if argument not given
-			neighborId = atoi(neighborIdArg);
-		}
-		if(!neighborIdArg && neighborId == 0) { // if neighbor-id has never been given
+		if(neighborId == 0) { // if neighbor-id has never been given
 			printShareUsage();
-		} else if(!isNeighbor(neighborId)) {
-			std::cout << "Client: The ID you provided is not assigned to a neighbor." << std::endl;
 		} else {
 			runShareQuery();
 		}
@@ -213,9 +260,21 @@ namespace brown {
 		connection = new client_connection(host, port);
 	}
 
-	bool client_interface::isQuery(char* str) {
+	bool client_interface::isList(char* str) {
 		regex_t queryRegex;
-		regcomp(&queryRegex, "^query.*", 0);
+		regcomp(&queryRegex, "^list.*", 0);
+		return regexec(&queryRegex, str, 0, NULL, 0) == 0;
+	}
+	
+	bool client_interface::isSelect(char* str) {
+		regex_t queryRegex;
+		regcomp(&queryRegex, "^select.*", 0);
+		return regexec(&queryRegex, str, 0, NULL, 0) == 0;
+	}
+	
+	bool client_interface::isFile(char* str) {
+		regex_t queryRegex;
+		regcomp(&queryRegex, "^file.*", 0);
 		return regexec(&queryRegex, str, 0, NULL, 0) == 0;
 	}
 	
@@ -240,21 +299,31 @@ namespace brown {
 		strncpy(request.visited, "", sizeof(request.visited));
 		return request;
 	}
-
-	void client_interface::printQueryUsage() {
-		std::cout << "Usage: query [neighbor-id] [file]" << std::endl;
-		std::cout << "   neighbor-id = ID of a neighbor to query (see 'list' command)."
-				<< " The most recent ID will be used if this parameter is omitted."
-				<< std::endl;
-		std::cout << "   file = File to request from neighbor."
-				<< " A ping request will be sent if this parameter is omitted." << std::endl;
+	
+	void client_interface::printListUsage() {
+		std::cout << "Usage: list [-s]" << std::endl;
+		std::cout << "   -s = flag to list all neighbors in system." << std::endl;
+		std::cout << "Without -s, only client-known neighbors will be printed." << std::endl;
+	}
+	
+	void client_interface::printSelectUsage() {
+		std::cout << "Usage: select neighbor-id" << std::endl;
+		std::cout << "   neighbor-id = ID of a neighbor to select (see 'list' command)." << std::endl;
+		std::cout << "A ping request will be sent to the neighbor with the selected ID." << std::endl;
+	}
+	
+	void client_interface::printFileUsage() {
+		std::cout << "Usage: file [-s] filename" << std::endl;
+		std::cout << "   -s = flag to search all neighbors in system." << std::endl;
+		std::cout << "   filename = File to search for." << std::endl;
+		std::cout << "File search will default to a selected neighbor if -s is not given." << std::endl;
+		std::cout << "A neighbor must be selected for the command to work correctly." << std::endl;
 	}
 
 	void client_interface::printShareUsage() {
-		std::cout << "Usage: share [neighbor-id]" << std::endl;
-		std::cout << "   neighbor-id = ID of a neighbor to share neighbors with (see 'list' command)."
-				<< " The most recent ID will be used if this parameter is omitted."
-				<< std::endl;
+		std::cout << "Usage: share" << std::endl;
+		std::cout << "Share request defaults to a selected neighbor." << std::endl;
+		std::cout << "A neighbor must be selected for the command to work correctly." << std::endl;
 	}
 
 	void client_interface::resetVariables() {

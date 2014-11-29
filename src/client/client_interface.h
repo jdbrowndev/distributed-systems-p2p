@@ -33,19 +33,25 @@ namespace brown {
 		void parseCommand();
 		void printWelcomeMessage();
 		void printCommands();
-		void handleQueryCommand();
+		void handleListCommand();
+		void handleSelectCommand();
+		void handleFileCommand();
 		void handleShareCommand();
 		void runPingQuery();
 		void runLookupQuery();
 		void runShareQuery();
 		void runSystemQuery();
 		void runSystemQuery(std::string fileName);
-		bool isQuery(char* str);
+		bool isList(char* str);
+		bool isSelect(char* str);
+		bool isFile(char* str);
 		bool isShare(char* str);
 		void instantiateConnection();
 		bool isNeighbor(int neighborID);
 		service_request createServiceRequest(int requestType, char* requestString, char* payload);
-		void printQueryUsage();
+		void printListUsage();
+		void printSelectUsage();
+		void printFileUsage();
 		void printShareUsage();
 		void resetVariables();
 	public:
