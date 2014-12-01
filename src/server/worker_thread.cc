@@ -56,11 +56,11 @@ namespace brown {
 
 	void worker_thread::handleNewClientRequest() {
 		std::cout << "Server: Received request from new client " << client << std::endl;
+		tryAppendNeighbor(client);
 		writeResponse((char*)"", (char*)"");
 	}
 
 	void worker_thread::handleClientExitRequest() {
-		tryAppendNeighbor(client);
 		std::cout << "Server: Received exit request from client " << client << std::endl;
 		exit = true;
 		writeResponse((char*)"", (char*)"");

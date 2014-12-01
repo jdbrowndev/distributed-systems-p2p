@@ -24,7 +24,7 @@ namespace brown {
 		char* port;
 		std::string command;
 		int neighborId;
-		client_connection* connection;
+		client_connection connection;
 		std::string server;
 		char fileName[FILE_NAME_MAX_LENGTH+1];
 		std::map<std::string, std::string> commands;
@@ -37,10 +37,12 @@ namespace brown {
 		void handleSelectCommand();
 		void handleFileCommand();
 		void handleShareCommand();
+		void runEntryQuery();
 		void runPingQuery();
 		void runLookupQuery();
 		void runShareQuery();
 		void runSystemQuery();
+		void runExitQuery();
 		void runSystemQuery(std::string fileName);
 		bool isList(char* str);
 		bool isSelect(char* str);
@@ -53,7 +55,7 @@ namespace brown {
 		void printSelectUsage();
 		void printFileUsage();
 		void printShareUsage();
-		void resetVariables();
+		void resetConnection();
 	public:
 		client_interface(char* port);
 		void initialize();

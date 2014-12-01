@@ -29,6 +29,7 @@ namespace brown {
 			// Query neighbor only if it is not in the visited list
 			if(std::find(visited.begin(), visited.end(), neighbor) == visited.end()) {
 				host_port_tokens neighborTokens = splitNeighbor(neighbor);
+				// Note: this connection is separate from the connection maintained by client_interface.cc
 				client_connection connection((char*)neighborTokens.host.c_str(),
 						(char*)neighborTokens.port.c_str());
 				if(connection.openConnection()) {

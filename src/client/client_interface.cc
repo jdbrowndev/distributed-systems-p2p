@@ -21,7 +21,7 @@
 #include "client_interface.h"
 
 namespace brown {
-	client_interface::client_interface(char* port): port(port), connection(NULL), neighborId(0) {
+	client_interface::client_interface(char* port): port(port), connection((char*)"", (char*)""), neighborId(0) {
 		commands["exit"] = "Exits the client interface but leaves the server running";
 		commands["list"] = "Lists all neighbors known to this client or all nodes in the system (-s flag)";
 		commands["select"] = "Selects a neighbor ID from the neighbors list for future communication";
@@ -37,7 +37,6 @@ namespace brown {
 		do {
 			promptCommand();
 			parseCommand();
-			resetVariables();
 		} while (strcasecmp(command.c_str(), "exit") != 0);
 	}
 
@@ -74,6 +73,7 @@ namespace brown {
 		} else if(isShare((char*)command.c_str())) {
 			handleShareCommand();
 		} else if(strcasecmp(command.c_str(), "exit") == 0) {
+			resetConnection();
 			std::cout << "Client exiting... the server will continue running until manually terminated"
 					<< std::endl << std::endl;
 		} else {
@@ -104,8 +104,19 @@ namespace brown {
 			if(!isNeighbor(neighborIdTmp)) {
 				std::cout << "Client: The ID you provided is not assigned to a neighbor." << std::endl;
 			} else {
+				// clean up old connection
+				resetConnection();
+				// attempt connection
 				neighborId = neighborIdTmp;
-				runPingQuery();
+				instantiateConnection();
+				if(connection.openConnection()) {
+					runEntryQuery();
+					runPingQuery();
+				} else {
+					neighborId = 0;
+					std::cout << "Client: Could not connect to the neighbor you selected. "
+							<< "Please select a different neighbor." << std::endl;
+				}
 			}
 		} else {
 			printSelectUsage();
@@ -162,39 +173,22 @@ namespace brown {
 		std::cout << strStream.str();
 	}
 
+	void client_interface::runEntryQuery() {
+		connection.sendRequest(createServiceRequest(0, (char*)"", (char*)""));
+	}
+
 	void client_interface::runPingQuery() {
-		instantiateConnection();
-		client_connection myConnection = *connection;
-		if(myConnection.openConnection()) {
-			myConnection.sendRequest(createServiceRequest(0, (char*)"", (char*)""));
-			myConnection.sendRequest(createServiceRequest(2, (char*)"ping", (char*)""));
-			myConnection.sendRequest(createServiceRequest(1, (char*)"", (char*)""));
-			myConnection.closeConnection();
-		}
+		connection.sendRequest(createServiceRequest(2, (char*)"ping", (char*)""));
 	}
 	
 	void client_interface::runLookupQuery() {
-		instantiateConnection();
-		client_connection myConnection = *connection;
-		if(myConnection.openConnection()) {
-			myConnection.sendRequest(createServiceRequest(0, (char*)"", (char*)""));
-			myConnection.sendRequest(createServiceRequest(2, (char*)"lookup", fileName));
-			myConnection.sendRequest(createServiceRequest(1, (char*)"", (char*)""));
-			myConnection.closeConnection();
-		}
+		connection.sendRequest(createServiceRequest(2, (char*)"lookup", fileName));
 	}
 
 	void client_interface::runShareQuery() {
-		instantiateConnection();
-		client_connection myConnection = *connection;
-		if(myConnection.openConnection()) {
-			myConnection.sendRequest(createServiceRequest(0, (char*)"", (char*)""));
-			myConnection.sendRequest(createServiceRequest(2, (char*)"ping", (char*)""));
-			myConnection.sendRequest(createServiceRequest(4, (char*)"neighbors",
-					(char*)encodeNeighbors(neighbors, MAX_NEIGHBORS_TO_SHARE).c_str()));
-			myConnection.sendRequest(createServiceRequest(1, (char*)"", (char*)""));
-			myConnection.closeConnection();
-		}
+		connection.sendRequest(createServiceRequest(2, (char*)"ping", (char*)""));
+		connection.sendRequest(createServiceRequest(4, (char*)"neighbors",
+				(char*)encodeNeighbors(neighbors, MAX_NEIGHBORS_TO_SHARE).c_str()));
 	}
 	
 	void client_interface::runSystemQuery() {
@@ -224,6 +218,10 @@ namespace brown {
 		}
 	}
 
+	void client_interface::runExitQuery() {
+		connection.sendRequest(createServiceRequest(1, (char*)"", (char*)""));
+	}
+
 	void client_interface::instantiateConnection() {
 		server = neighbors.at(neighborId-1);
 		std::string neighbor = server.c_str(); // c_str() forces a deep copy
@@ -231,7 +229,7 @@ namespace brown {
 		char* port = new char[PORT_MAX_LENGTH + 1];
 		strncpy(host, strtok((char*)neighbor.c_str(), ":"), HOST_MAX_LENGTH);
 		strncpy(port, strtok(NULL, ":"), PORT_MAX_LENGTH);
-		connection = new client_connection(host, port);
+		connection = client_connection(host, port);
 	}
 
 	bool client_interface::isList(char* str) {
@@ -299,11 +297,11 @@ namespace brown {
 		std::cout << "A neighbor must be selected for the command to work correctly." << std::endl;
 	}
 
-	void client_interface::resetVariables() {
-		strncpy(fileName, "", FILE_NAME_MAX_LENGTH);
-		if(connection) {
-			delete connection;
-			connection = NULL;
+	void client_interface::resetConnection() {
+		if(neighborId != 0) {
+			std::cout << "Client: Closing previous connection with " << server << " ..." << std::endl;
+			runExitQuery();
+			connection.closeConnection();
 		}
 		server = "";
 	}

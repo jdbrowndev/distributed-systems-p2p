@@ -107,8 +107,8 @@ namespace brown {
 			}
 			// If found, print file contents (any lookup)
 			if(strcasecmp(response.requestString, "found") == 0) {
-				std::cout << "Client: File contents:" << std::endl << std::endl
-						<< response.payload << std::endl;
+				std::cout << "Client: File contents:\n\n"
+						<< response.payload << "<end of file>\n" << std::endl;
 			}
 		} else {
 			std::cout << "Client: Received response (type 3) from " << host << ":"
