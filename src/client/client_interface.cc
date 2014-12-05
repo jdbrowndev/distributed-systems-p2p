@@ -22,7 +22,7 @@
 
 namespace brown {
 	client_interface::client_interface(char* port): port(port), connection((char*)"", (char*)""), neighborId(0) {
-		fileName[255] = '\0';
+		fileName[FILE_NAME_MAX_LENGTH] = '\0';
 		commands["exit"] = "Exits the client interface but leaves the server running";
 		commands["list"] = "Lists all neighbors known to this client or all nodes in the system (-s flag)";
 		commands["select"] = "Selects a neighbor ID from the neighbors list for future communication";
