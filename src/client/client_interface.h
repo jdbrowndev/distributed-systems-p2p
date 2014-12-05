@@ -19,7 +19,7 @@ namespace brown {
 	private:
 		const static int COMMAND_LIST_INDENT = 3;
 		const static int COMMAND_LIST_SPACING = 8;
-		const static int FILE_NAME_MAX_LENGTH = 12;
+		const static int FILE_NAME_MAX_LENGTH = 255;
 		const static int MAX_NEIGHBORS_TO_SHARE = 3;
 		char* port;
 		std::string command;
