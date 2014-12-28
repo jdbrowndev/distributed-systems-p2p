@@ -16,16 +16,16 @@
 #include <netdb.h>
 
 namespace brown {
-	class network_connection {
-	public:
-		int getSocketDesc();
-	protected:
-		int socketdesc;
-		addrinfo* myinfo;
-		network_connection();
-		void openSocket();
-		bool setAddressInfo(char* host, char* port);
-	};
+    class network_connection {
+    public:
+        int getSocketDesc();
+    protected:
+        int socketdesc;
+        addrinfo* myinfo;
+        network_connection();
+        void openSocket();
+        bool setAddressInfo(char* host, char* port);
+    };
 }
 
 #endif /* NETWORK_CONNECTION_H_ */

@@ -19,21 +19,21 @@
 #include "../service_request.h"
 
 namespace brown {
-	class request_handler {
-	private:
-		struct worker_thread_args {
-			int connection;
-			int port;
-		};
-		char* port;
-		int socketdesc;
-		int connection;
-		bool stepToPort();
-		static void* launchWorkerThread(void*);
-	public:
-		request_handler(int socketdesc, char* port);
-		void serviceRequests();
-	};
+    class request_handler {
+    private:
+        struct worker_thread_args {
+            int connection;
+            int port;
+        };
+        char* port;
+        int socketdesc;
+        int connection;
+        bool stepToPort();
+        static void* launchWorkerThread(void*);
+    public:
+        request_handler(int socketdesc, char* port);
+        void serviceRequests();
+    };
 }
 
 #endif /* REQUEST_HANDLER_H_ */

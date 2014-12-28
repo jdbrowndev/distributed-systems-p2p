@@ -20,19 +20,19 @@
 #include "../service_request.h"
 
 namespace brown {
-	class client_connection : public network_connection {
-	private:
-		char* host;
-		char* port;
-		int connection;
-	public:
-		client_connection(char* host, char* port);
-		bool openConnection();
-		void closeConnection();
-		service_request sendRequest(service_request request);
-		void printRequestMessage(service_request request);
-		void printResponseMessage(service_request response);
-	};
+    class client_connection : public network_connection {
+    private:
+        char* host;
+        char* port;
+        int connection;
+    public:
+        client_connection(char* host, char* port);
+        bool openConnection();
+        void closeConnection();
+        service_request sendRequest(service_request request);
+        void printRequestMessage(service_request request);
+        void printResponseMessage(service_request response);
+    };
 }
 
 #endif /* CLIENT_CONNECTION_H_ */

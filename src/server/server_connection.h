@@ -17,17 +17,17 @@
 #include "../network_connection.h"
 
 namespace brown {
-	class server_connection : public network_connection {
-	private:
-		int lowPort;
-		int highPort;
-		char* port;
-		bool stepToPort();
-	public:
-		server_connection(int lowPort, int highPort);
-		void openConnection();
-		char* getPort();
-	};
+    class server_connection : public network_connection {
+    private:
+        int lowPort;
+        int highPort;
+        char* port;
+        bool stepToPort();
+    public:
+        server_connection(int lowPort, int highPort);
+        void openConnection();
+        char* getPort();
+    };
 }
 
 #endif /* SERVER_CONNECTION_H_ */

@@ -23,31 +23,31 @@
 
 namespace brown {
 
-	request_handler::request_handler(int socketdesc, char* port): socketdesc(socketdesc),
-			port(port) { }
+    request_handler::request_handler(int socketdesc, char* port): socketdesc(socketdesc),
+            port(port) { }
 
-	void request_handler::serviceRequests() {
-		for(;;) {
-			connection = accept(socketdesc, NULL, NULL);
-			if (connection < 0) {
-				std::cout << "Server: Error in accept" << std::endl;
-				exit(0);
-			} else {
-				// create worker thread to handle connection
-				pthread_t workerThread;
-				worker_thread_args wargs;
-				wargs.connection = connection;
-				wargs.port = atoi(port);
-				pthread_create(&workerThread, NULL, launchWorkerThread, (void*)&wargs);
-			}
-		}
-	}
+    void request_handler::serviceRequests() {
+        for(;;) {
+            connection = accept(socketdesc, NULL, NULL);
+            if (connection < 0) {
+                std::cout << "Server: Error in accept" << std::endl;
+                exit(0);
+            } else {
+                // create worker thread to handle connection
+                pthread_t workerThread;
+                worker_thread_args wargs;
+                wargs.connection = connection;
+                wargs.port = atoi(port);
+                pthread_create(&workerThread, NULL, launchWorkerThread, (void*)&wargs);
+            }
+        }
+    }
 
-	void* request_handler::launchWorkerThread(void* args) {
-		worker_thread_args wargs = *((worker_thread_args*)args);
-		worker_thread worker(wargs.connection, wargs.port);
-		worker.handleRequests();
-		pthread_exit(0);
-		return NULL;
-	}
+    void* request_handler::launchWorkerThread(void* args) {
+        worker_thread_args wargs = *((worker_thread_args*)args);
+        worker_thread worker(wargs.connection, wargs.port);
+        worker.handleRequests();
+        pthread_exit(0);
+        return NULL;
+    }
 }
