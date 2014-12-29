@@ -4,7 +4,7 @@
 // Author: Jordan Brown
 // Date: Sep 4, 2014
 //
-// Stores global variables
+// Stores global variables and procedures
 
 #ifndef GLOBALS_H_
 #define GLOBALS_H_

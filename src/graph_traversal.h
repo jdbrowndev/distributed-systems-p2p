@@ -4,7 +4,7 @@
 // Author: Jordan Brown
 // Date: Nov 23, 2014
 //
-//
+// Traverses the entire network of peers
 
 #ifndef GRAPH_TRAVERSAL_H_
 #define GRAPH_TRAVERSAL_H_
@@ -25,7 +25,7 @@ namespace brown {
     };
     class graph_traversal {
     private:
-        int port;
+        int port; // The port this node is currently listening on
         service_request createServiceRequest(int requestType, char* requestString, char* payload, char* visitedString);
         service_request sendTraverseRequest(client_connection &connection, std::vector<std::string> &visited,
                 std::string fileName);

@@ -19,26 +19,26 @@ namespace brown {
 
     file_manager::file_manager() { }
 
-    void file_manager::openPortNumsFile(){
+    void file_manager::openPortNumsFile() {
         portnumsFile.open(PORTNUMS_FILE_NAME);
     }
     
-    void file_manager::closePortNumsFile(){
+    void file_manager::closePortNumsFile() {
         portnumsFile.close();
         return;
     }
     
-    void file_manager::openNeighborsFile(){
+    void file_manager::openNeighborsFile() {
         neighborsFile.open(NEIGHBORS_FILE_NAME, std::fstream::in |
                 std::fstream::app | std::fstream::out);
     }
     
-    void file_manager::closeNeighborsFile(){
+    void file_manager::closeNeighborsFile() {
         neighborsFile.close();
         return;
     }
     
-    std::string* file_manager::readPortNumsFile(std::string ports[]){
+    std::string* file_manager::readPortNumsFile(std::string ports[]) {
         std::string line;
         for(int i = 0; i < 2; i++)
         {
@@ -48,7 +48,7 @@ namespace brown {
         return ports;
     }
     
-    void file_manager::readNeighborsFile(){
+    void file_manager::readNeighborsFile() {
         std::string line;
         while(getline(neighborsFile, line)){
             neighbors.push_back(line);
@@ -56,7 +56,7 @@ namespace brown {
         return;
     }
     
-    void file_manager::appendNeighborToFile(std::string neighbor){
+    void file_manager::appendNeighborToFile(std::string neighbor) {
         neighborsFile << neighbor;
         neighborsFile << "\n";
         return;

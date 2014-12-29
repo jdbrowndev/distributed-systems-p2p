@@ -4,7 +4,7 @@
 // Author: Jordan Brown
 // Date: Sep 1, 2014
 //
-// Entry point for client/server application
+// Entry point for peer
 
 #include <string.h>
 #include <stdlib.h>

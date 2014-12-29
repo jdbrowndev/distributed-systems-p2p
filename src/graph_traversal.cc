@@ -4,7 +4,7 @@
 // Author: Jordan Brown
 // Date: Nov 23, 2014
 //
-//
+// Traverses the entire network of peers
 
 #include <string.h>
 #include <string>

@@ -4,7 +4,7 @@
 // Author: Jordan Brown
 // Date: Sep 6, 2014
 //
-// Handles connection reads/writes
+// Handles reads/writes to other peers
 
 #ifndef WORKER_THREAD_H_
 #define WORKER_THREAD_H_
@@ -16,7 +16,7 @@ namespace brown {
     class worker_thread {
     private:
         int connection;
-        int port;
+        int port; // The port this node is currently listening on
         service_request request;
         std::string client;
         bool exit;

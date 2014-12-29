@@ -4,7 +4,7 @@
 // Author: Jordan Brown
 // Date: Sep 4, 2014
 //
-// Accepts and handles client connections
+// Accepts and handles connections from other peers
 
 #ifndef REQUEST_HANDLER_H_
 #define REQUEST_HANDLER_H_

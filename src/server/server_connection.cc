@@ -4,7 +4,7 @@
 // Author: Jordan Brown
 // Date: Sep 27, 2014
 //
-// Establishes connection to receive client requests
+// Establishes connection to receive requests from other peers
 
 #include <stdlib.h>
 #include <string.h>

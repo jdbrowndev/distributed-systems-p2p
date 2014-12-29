@@ -4,7 +4,7 @@
 // Author: Jordan Brown
 // Date: Sep 27, 2014
 //
-// Establishes connection to receive client requests
+// Establishes connection to receive requests from other peers
 
 #ifndef SERVER_CONNECTION_H_
 #define SERVER_CONNECTION_H_

@@ -4,7 +4,7 @@
 // Author: Jordan Brown
 // Date: Sep 3, 2014
 //
-// Connects client to server application
+// Connects to a peer
 
 #include <stdlib.h>
 #include <string.h>

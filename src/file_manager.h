@@ -19,6 +19,9 @@ namespace brown {
         static const char* PORTNUMS_FILE_NAME;
         static const char* NEIGHBORS_FILE_NAME;
         static const char* CONTENT_FILE_DIRECTORY;
+        std::fstream portnumsFile;
+        std::fstream neighborsFile;
+        std::fstream contentFile;
     public:
         file_manager();
         void openPortNumsFile();
@@ -29,10 +32,6 @@ namespace brown {
         void readNeighborsFile();
         void appendNeighborToFile(std::string neighbor);
         std::string readContentFile(std::string fileName);
-    protected:
-        std::fstream portnumsFile;
-        std::fstream neighborsFile;
-        std::fstream contentFile;
     };
 }
 

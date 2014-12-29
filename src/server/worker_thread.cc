@@ -4,7 +4,7 @@
 // Author: Jordan Brown
 // Date: Sep 6, 2014
 //
-// Handles connection reads/writes
+// Handles reads/writes to other peers
 
 #include <sys/types.h>
 #include <sys/socket.h>

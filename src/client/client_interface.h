@@ -21,7 +21,7 @@ namespace brown {
         const static int COMMAND_LIST_SPACING = 8;
         const static int FILE_NAME_MAX_LENGTH = 255;
         const static int MAX_NEIGHBORS_TO_SHARE = 3;
-        char* port;
+        char* port; // The port this node is currently listening on
         std::string command;
         int neighborId;
         client_connection connection;

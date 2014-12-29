@@ -4,7 +4,7 @@
 // Author: Jordan Brown
 // Date: Sep 4, 2014
 //
-// Accepts and handles client connections
+// Accepts and handles connections from other peers
 
 #include <stdlib.h>
 #include <unistd.h>
