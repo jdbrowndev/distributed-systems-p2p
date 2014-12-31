@@ -42,20 +42,6 @@ void appendToNeighborsFile(std::string neighbor) {
     pthread_mutex_unlock(&neighborsFileMutex);
 }
 
-void printNeighbors() {
-    std::cout << "Neighbors:" << std::endl;
-    const int indent = 3;
-    int count = 1;
-    for(std::vector<std::string>::iterator it = neighbors.begin();
-            it != neighbors.end(); it++) {
-        for(int i = 1; i <= indent; i++) {
-            std::cout << " ";
-        }
-        std::cout << count << ". " << *it << std::endl;
-        count++;
-    }
-}
-
 std::string encodeNeighbors(std::vector<std::string> neighborsVector) {
     return encodeNeighbors(neighborsVector, -1);
 }
@@ -76,17 +62,17 @@ std::string encodeNeighbors(std::vector<std::string> neighborsVector, int max) {
 }
 
 std::vector<std::string> decodeNeighbors(std::string neighborsString) {
-    std::vector<std::string> outputVector;
+    std::vector<std::string> output;
     int neighborsCount = atoi(strtok((char*)neighborsString.c_str(), ";"));
     std::stringstream strStream;
     for(int i = 1; i <= neighborsCount; i++) {
         char* host = strtok(NULL, ";");
         char* port = strtok(NULL, ";");
         strStream << host << ":" << port;
-        outputVector.push_back(strStream.str());
+        output.push_back(strStream.str());
         strStream.str("");
     }
-    return outputVector;
+    return output;
 }
 
 host_port_tokens splitNeighbor(std::string neighbor) {
@@ -97,19 +83,20 @@ host_port_tokens splitNeighbor(std::string neighbor) {
     return output;
 }
 
-void printVectorStrings(std::vector<std::string> vector, std::string title, bool numbered) {
-    const int padding = 5;
+void printStringVector(std::vector<std::string> vector, std::string title, bool numbered) {
+    const int titlePadding = 5;
+    const int titleDecorLength = title.length() + titlePadding * 2;
     std::stringstream outputStr;
     outputStr << "\n";
-    for(int i = 1; i <= title.length() + padding*2; i++) {
+    for(int i = 1; i <= titleDecorLength; i++) {
         outputStr << "=";
     }
     outputStr << "\n";
-    for(int i = 1; i <= padding; i++) {
+    for(int i = 1; i <= titlePadding; i++) {
         outputStr << " ";
     }
     outputStr << title << "\n";
-    for(int i = 1; i <= title.length() + padding*2; i++) {
+    for(int i = 1; i <= titleDecorLength; i++) {
         outputStr << "=";
     }
     outputStr << "\n";

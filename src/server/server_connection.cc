@@ -27,7 +27,9 @@ namespace brown {
     }
 
     void server_connection::openConnection() {
-        openSocket();
+        if (!openSocket()) {
+            exit(0); 
+        }
 
         // Bind socket to an address
         if (!stepToPort()) {

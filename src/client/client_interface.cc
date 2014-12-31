@@ -87,7 +87,7 @@ namespace brown {
         char* systemFlag = strtok(NULL, " ");
         
         if(!systemFlag) {  //client-based list command
-            printVectorStrings(neighbors, "Neighbors", true);
+            printStringVector(neighbors, "Neighbors", true);
         } else if(strncmp(systemFlag, "-s", 2) == 0) { //system-based list command
             runSystemQuery();
         } else { //incorrect flag, print usage
@@ -209,7 +209,7 @@ namespace brown {
         graph_traversal_result result = traversal.traverse(initialVisited, fileName);
         // If the query is a system-wide ping, print the results
         if(fileName.compare("") == 0) {
-            printVectorStrings(result.visited, "Network Nodes", false);
+            printStringVector(result.visited, "Network Nodes", false);
         // Else, if the query is system-wide file lookup, print not found if
         // no file was found (note: if file was found, client_connection.cc will
         // print the contents automatically

@@ -24,12 +24,13 @@ namespace brown {
         return socketdesc;
     }
 
-    void network_connection::openSocket() {
+    bool network_connection::openSocket() {
         socketdesc = socket(AF_INET, SOCK_STREAM, 0);
         if (socketdesc < 0) {
             std::cout << "Network: Error creating socket" << std::endl;
-            exit(0);
+            return false;
         }
+        return true;
     }
 
     bool network_connection::setAddressInfo(char* host, char* port) {

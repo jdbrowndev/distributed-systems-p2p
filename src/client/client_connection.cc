@@ -25,8 +25,7 @@ namespace brown {
             port(port) { }
 
     bool client_connection::openConnection() {
-        openSocket();
-        if(setAddressInfo(host, port)) {
+        if(openSocket() && setAddressInfo(host, port)) {
             std::cout << "Client: Connecting to " << host << ":" << port
                     << " ..." << std::endl;
             connection = connect(socketdesc, myinfo->ai_addr, myinfo->ai_addrlen);

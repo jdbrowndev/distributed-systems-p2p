@@ -19,7 +19,8 @@
 namespace brown {
     graph_traversal::graph_traversal(int port):port(port) { }
 
-    graph_traversal_result graph_traversal::traverse(std::vector<std::string> visited, std::string fileName) {
+    graph_traversal_result graph_traversal::traverse(std::vector<std::string> visited, std::string 
+            fileName) {
         std::string fileContents = "";
         // Deep copying the neighbors vector is much safer than locking it
         // for the entire duration of the for loop.
@@ -48,8 +49,8 @@ namespace brown {
     }
 
     // Precondition: connection must be valid and open
-    service_request graph_traversal::sendTraverseRequest(client_connection &connection, std::vector<std::string> &visited,
-            std::string fileName) {
+    service_request graph_traversal::sendTraverseRequest(client_connection &connection, 
+            std::vector<std::string> &visited, std::string fileName) {
         connection.sendRequest(createServiceRequest(0, (char*)"", (char*)"", (char*)""));
         service_request response = connection.sendRequest(createServiceRequest(5,
                 fileName.length() > 0 ? (char*)"lookup" : (char*)"",
@@ -59,8 +60,8 @@ namespace brown {
         return response;
     }
 
-    service_request graph_traversal::createServiceRequest(int requestType, char* requestString, char* payload,
-            char* visitedString) {
+    service_request graph_traversal::createServiceRequest(int requestType, char* requestString, 
+            char* payload, char* visitedString) {
         service_request request;
         gethostname(request.domainName, sizeof(request.domainName));
         request.portNumber = port;

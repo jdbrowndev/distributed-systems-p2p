@@ -23,7 +23,7 @@ namespace brown {
         int socketdesc;
         addrinfo* myinfo;
         network_connection();
-        void openSocket();
+        bool openSocket();
         bool setAddressInfo(char* host, char* port);
     };
 }
