@@ -17,6 +17,7 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include "../network_connection.h"
+#include "../neighbor_serializer.h"
 #include "../service_request.h"
 
 namespace brown {
@@ -25,6 +26,7 @@ namespace brown {
         char* host;
         char* port;
         int connection;
+        neighbor_serializer serializer;
     public:
         client_connection(char* host, char* port);
         bool openConnection();

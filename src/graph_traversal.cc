@@ -13,6 +13,7 @@
 #include <pthread.h>
 #include "client/client_connection.h"
 #include "globals.h"
+#include "neighbor_serializer.h"
 #include "service_request.h"
 #include "graph_traversal.h"
 
@@ -29,7 +30,7 @@ namespace brown {
             std::string neighbor = *it;
             // Query neighbor only if it is not in the visited list
             if(std::find(visited.begin(), visited.end(), neighbor) == visited.end()) {
-                host_port_tokens neighborTokens = splitNeighbor(neighbor);
+                neighbor_serializer::host_port_tokens neighborTokens = serializer.splitNeighbor(neighbor);
                 // Note: this connection is separate from the connection maintained by client_interface.cc
                 client_connection connection((char*)neighborTokens.host.c_str(),
                         (char*)neighborTokens.port.c_str());
@@ -37,7 +38,7 @@ namespace brown {
                     visited.push_back(neighbor);
                     service_request response = sendTraverseRequest(connection, visited, fileName);
                     connection.closeConnection();
-                    visited = decodeNeighbors(std::string(response.visited));
+                    visited = serializer.decodeNeighbors(std::string(response.visited));
                     if(strcasecmp(response.requestString, "found") == 0) {
                         fileContents = std::string(response.payload);
                         break;
@@ -55,7 +56,7 @@ namespace brown {
         service_request response = connection.sendRequest(createServiceRequest(5,
                 fileName.length() > 0 ? (char*)"lookup" : (char*)"",
                 (char*)fileName.c_str(),
-                (char*)encodeNeighbors(visited).c_str()));
+                (char*)serializer.encodeNeighbors(visited).c_str()));
         connection.sendRequest(createServiceRequest(1, (char*)"", (char*)"", (char*)""));
         return response;
     }

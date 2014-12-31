@@ -10,6 +10,7 @@
 #define WORKER_THREAD_H_
 
 #include <string>
+#include "../neighbor_serializer.h"
 #include "../service_request.h"
 
 namespace brown {
@@ -20,6 +21,7 @@ namespace brown {
         service_request request;
         std::string client;
         bool exit;
+        neighbor_serializer serializer;
         void handleRequest();
         void handleNewClientRequest();
         void handleClientExitRequest();

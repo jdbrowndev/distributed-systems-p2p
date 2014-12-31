@@ -12,6 +12,7 @@
 #include <map>
 #include <string>
 #include "client_connection.h"
+#include "../neighbor_serializer.h"
 #include "../service_request.h"
 
 namespace brown {
@@ -28,6 +29,7 @@ namespace brown {
         std::string server;
         char fileName[FILE_NAME_MAX_LENGTH+1];
         std::map<std::string, std::string> commands;
+        neighbor_serializer serializer;
         void promptForNeighbor();
         void promptCommand();
         void parseCommand();

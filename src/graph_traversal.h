@@ -13,6 +13,7 @@
 #include <vector>
 #include "client/client_connection.h"
 #include "service_request.h"
+#include "neighbor_serializer.h"
 #include "globals.h"
 
 namespace brown {
@@ -26,6 +27,7 @@ namespace brown {
     class graph_traversal {
     private:
         int port; // The port this node is currently listening on
+        neighbor_serializer serializer;
         service_request createServiceRequest(int requestType, char* requestString, char* payload, char* visitedString);
         service_request sendTraverseRequest(client_connection &connection, std::vector<std::string> &visited,
                 std::string fileName);

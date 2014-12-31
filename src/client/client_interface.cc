@@ -189,7 +189,7 @@ namespace brown {
     void client_interface::runShareQuery() {
         connection.sendRequest(createServiceRequest(2, (char*)"ping", (char*)""));
         connection.sendRequest(createServiceRequest(4, (char*)"neighbors",
-                (char*)encodeNeighbors(neighbors, MAX_NEIGHBORS_TO_SHARE).c_str()));
+                (char*)serializer.encodeNeighbors(neighbors, MAX_NEIGHBORS_TO_SHARE).c_str()));
     }
     
     void client_interface::runSystemQuery() {
