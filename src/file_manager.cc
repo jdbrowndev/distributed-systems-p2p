@@ -49,16 +49,14 @@ namespace brown {
         contentFile.close();
     }
     
-    std::string* file_manager::readPortNumsFile(std::string ports[]) {
+    void file_manager::readPortNumsFile(std::string ports[]) {
         std::string line;
         openPortNumsFile();
         for(int i = 0; i < 2; i++)
         {
-            getline(portnumsFile, line);
-            ports[i] = line;
+            getline(portnumsFile, ports[i]);
         }
         closePortNumsFile();
-        return ports;
     }
     
     void file_manager::readNeighborsFile(std::vector<std::string> &vector) {

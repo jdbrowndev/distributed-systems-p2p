@@ -34,7 +34,7 @@ namespace brown {
         void closeContentFile();
     public:
         file_manager();
-        std::string* readPortNumsFile(std::string ports[]);
+        void readPortNumsFile(std::string ports[]);
         void readNeighborsFile(std::vector<std::string> &vector);
         void appendNeighborToFile(std::string neighbor);
         std::string readContentFile(std::string fileName);
