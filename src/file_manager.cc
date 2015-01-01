@@ -11,19 +11,28 @@
 #include <sstream>
 #include <fstream>
 #include <pthread.h>
+#include "globals.h"
 #include "file_manager.h"
 
 namespace brown {
-    const char* file_manager::PORTNUMS_FILE_NAME = "config/portnums.txt";
-    const char* file_manager::NEIGHBORS_FILE_NAME = "config/neighbors.txt";
-    const char* file_manager::CONTENT_FILE_DIRECTORY = "content";
+    const std::string file_manager::PORTNUMS_FILE_NAME = "config/portnums.txt";
+    const std::string file_manager::NEIGHBORS_FILE_NAME = "config/neighbors.txt";
+    const std::string file_manager::CONTENT_FILE_DIRECTORY = "content/";
 
     file_manager::file_manager() {
         pthread_mutex_init(&neighborsFileMutex, NULL);
+
+        // Find program directory
+        char buffer[PATH_MAX] = "";
+        readlink("/proc/self/exe", buffer, PATH_MAX - 1);
+        std::string tmp(buffer);
+        // Eliminate "bin/main" from the string
+        programDirectory = tmp.substr(0, tmp.size() - 8);
     }
 
     void file_manager::openPortNumsFile() {
-        portnumsFile.open(PORTNUMS_FILE_NAME);
+        std::string path = programDirectory + PORTNUMS_FILE_NAME;
+        portnumsFile.open(path.c_str());
     }
     
     void file_manager::closePortNumsFile() {
@@ -31,7 +40,8 @@ namespace brown {
     }
     
     void file_manager::openNeighborsFile() {
-        neighborsFile.open(NEIGHBORS_FILE_NAME, std::fstream::in |
+        std::string path = programDirectory + NEIGHBORS_FILE_NAME;
+        neighborsFile.open(path.c_str(), std::fstream::in |
                 std::fstream::app | std::fstream::out);
     }
     
@@ -40,7 +50,7 @@ namespace brown {
     }
 
     void file_manager::openContentFile(std::string fileName) {
-        std::string path = std::string(CONTENT_FILE_DIRECTORY) + "/" + fileName;
+        std::string path = programDirectory + CONTENT_FILE_DIRECTORY + fileName;
         contentFile.open(path.c_str());
     }
 

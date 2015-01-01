@@ -18,9 +18,10 @@
 namespace brown {
     class file_manager {
     private:
-        static const char* PORTNUMS_FILE_NAME;
-        static const char* NEIGHBORS_FILE_NAME;
-        static const char* CONTENT_FILE_DIRECTORY;
+        static const std::string PORTNUMS_FILE_NAME;
+        static const std::string NEIGHBORS_FILE_NAME;
+        static const std::string CONTENT_FILE_DIRECTORY;
+        std::string programDirectory; // The root directory of the program where bin, config, etc. lie
         std::fstream portnumsFile;
         std::fstream neighborsFile;
         std::fstream contentFile;
