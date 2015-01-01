@@ -20,6 +20,7 @@
 using namespace brown;
 
 void validateInput(char* lowPort, char* highPort);
+bool hasClientArg(int argc, char** argv);
 void* launchClientInterface(void* args);
 
 int main(int argc, char** argv) {
@@ -34,13 +35,14 @@ int main(int argc, char** argv) {
     server_connection serverConnection(atoi(lowPort), atoi(highPort));
     serverConnection.openConnection();
 
-    if(argc > 1) {
+    if(hasClientArg(argc, argv)) {
         pthread_t clientInterfaceThread;
-        pthread_create(&clientInterfaceThread, NULL, launchClientInterface, (void*)serverConnection.getPort());
+        pthread_create(&clientInterfaceThread, NULL, launchClientInterface, 
+                (void*)serverConnection.getPort());
     }
     else {
-        std::cout << "No command line parameter specified, using server-only mode" << std::endl;
-        std::cout << "The server will continue running until manually terminated\n" << std::endl;
+        std::cout << "No command line parameter given, using server-only mode\n"
+            << "The server will continue running until manually terminated\n" << std::endl;
     }
     
     request_handler handler(serverConnection.getSocketDesc(), serverConnection.getPort());
@@ -69,6 +71,18 @@ void validateInput(char* lowPort, char* highPort) {
                 << PORT_MAXIMUM << std::endl;
         exit(0);
     }
+}
+
+bool hasClientArg(int argc, char** argv) {
+    opterr = 0;
+    char flag;
+    while((flag = getopt(argc, argv, "c")) != -1) {
+        switch(flag) {
+            case 'c':
+                return true;
+        }
+    }
+    return false;
 }
 
 void* launchClientInterface(void* args) {
