@@ -11,7 +11,6 @@
 #include <sstream>
 #include <fstream>
 #include <pthread.h>
-#include "globals.h"
 #include "file_manager.h"
 
 namespace brown {
@@ -59,15 +58,17 @@ namespace brown {
         closePortNumsFile();
     }
     
-    void file_manager::readNeighborsFile(std::vector<std::string> &vector) {
+    std::vector<std::string> file_manager::readNeighborsFile() {
+        std::vector<std::string> output;
         std::string line;
         pthread_mutex_lock(&neighborsFileMutex);
             openNeighborsFile();
             while(getline(neighborsFile, line)) {
-                vector.push_back(line);
+                output.push_back(line);
             }
             closeNeighborsFile();
         pthread_mutex_unlock(&neighborsFileMutex);
+        return output;
     }
     
     void file_manager::appendNeighborToFile(std::string neighbor) {

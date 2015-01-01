@@ -25,7 +25,7 @@ namespace brown {
         std::string fileContents = "";
         // Deep copying the neighbors vector is much safer than locking it
         // for the entire duration of the for loop.
-        std::vector<std::string> neighborsCopy = neighbors;
+        std::vector<std::string> neighborsCopy = neighbors.copy();
         for(std::vector<std::string>::iterator it = neighborsCopy.begin(); it != neighborsCopy.end(); it++) {
             std::string neighbor = *it;
             // Query neighbor only if it is not in the visited list

@@ -29,9 +29,7 @@ int main(int argc, char** argv) {
     char* highPort = (char*)portnums[1].c_str();
     validateInput(lowPort, highPort);
 
-    fileManager.readNeighborsFile(neighbors);
-
-    initGlobals();
+    initGlobals(fileManager.readNeighborsFile());
 
     server_connection serverConnection(atoi(lowPort), atoi(highPort));
     serverConnection.openConnection();

@@ -15,21 +15,15 @@
 #include <pthread.h>
 #include "globals.h"
 #include "file_manager.h"
+#include "neighbors_vector.h"
 
 using namespace brown;
 
-pthread_mutex_t neighborsMutex;
-std::vector<std::string> neighbors;
+neighbors_vector neighbors;
 file_manager fileManager;
 
-void initGlobals() {
-    pthread_mutex_init(&neighborsMutex, NULL);
-}
-
-void appendToNeighborsVector(std::string neighbor) {
-    pthread_mutex_lock(&neighborsMutex);
-        neighbors.push_back(neighbor);
-    pthread_mutex_unlock(&neighborsMutex);
+void initGlobals(std::vector<std::string> initialNeighbors) {
+    neighbors = neighbors_vector(initialNeighbors);
 }
 
 void printStringVector(std::vector<std::string> vector, std::string title, bool numbered) {

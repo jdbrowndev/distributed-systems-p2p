@@ -169,8 +169,8 @@ namespace brown {
     }
 
     bool worker_thread::tryAppendNeighbor(std::string neighbor) {
-        if(std::find(neighbors.begin(), neighbors.end(), neighbor) == neighbors.end()) {
-            appendToNeighborsVector(neighbor);
+        if(neighbors.contains(neighbor)) {
+            neighbors.append(neighbor);
             fileManager.appendNeighborToFile(neighbor);
             return true;
         }

@@ -32,7 +32,7 @@ namespace brown {
 
     void client_interface::initialize() {
         printWelcomeMessage();
-        if(neighbors.empty()) {
+        if(neighbors.size() == 0) {
             promptForNeighbor();
         }
         do {
@@ -53,7 +53,7 @@ namespace brown {
         std::cout << "port>";
         getline(std::cin, port);
         std::string neighbor = host + ":" + port;
-        appendToNeighborsVector(neighbor);
+        neighbors.append(neighbor);
         fileManager.appendNeighborToFile(neighbor);
     }
 
@@ -87,7 +87,7 @@ namespace brown {
         char* systemFlag = strtok(NULL, " ");
         
         if(!systemFlag) {  //client-based list command
-            printStringVector(neighbors, "Neighbors", true);
+            printStringVector(neighbors.copy(), "Neighbors", true);
         } else if(strncmp(systemFlag, "-s", 2) == 0) { //system-based list command
             runSystemQuery();
         } else { //incorrect flag, print usage
@@ -189,7 +189,7 @@ namespace brown {
     void client_interface::runShareQuery() {
         connection.sendRequest(createServiceRequest(2, (char*)"ping", (char*)""));
         connection.sendRequest(createServiceRequest(4, (char*)"neighbors",
-                (char*)serializer.encodeNeighbors(neighbors, MAX_NEIGHBORS_TO_SHARE).c_str()));
+                (char*)serializer.encodeNeighbors(neighbors.copy(), MAX_NEIGHBORS_TO_SHARE).c_str()));
     }
     
     void client_interface::runSystemQuery() {
