@@ -1,10 +1,10 @@
 //
 // file_manager.h
 //
-// Author: Jesse Rowland
-// Date: Oct 1, 2014
+// Author: Jordan Brown / Jesse Rowland
+// Date: Dec 31, 2014
 //
-// Handles file write/reads
+// Thread-safe class for handling file write/reads
 
 #ifndef FILE_MANAGER_H_
 #define FILE_MANAGER_H_
@@ -12,6 +12,8 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <vector>
+#include <pthread.h>
 
 namespace brown {
     class file_manager {
@@ -22,14 +24,18 @@ namespace brown {
         std::fstream portnumsFile;
         std::fstream neighborsFile;
         std::fstream contentFile;
-    public:
-        file_manager();
+        // Only the neighbors file needs a mutex lock; all other files are read-only
+        pthread_mutex_t neighborsFileMutex;
         void openPortNumsFile();
         void closePortNumsFile();
         void openNeighborsFile();
         void closeNeighborsFile();
+        void openContentFile(std::string fileName);
+        void closeContentFile();
+    public:
+        file_manager();
         std::string* readPortNumsFile(std::string ports[]);
-        void readNeighborsFile();
+        void readNeighborsFile(std::vector<std::string> &vector);
         void appendNeighborToFile(std::string neighbor);
         std::string readContentFile(std::string fileName);
     };

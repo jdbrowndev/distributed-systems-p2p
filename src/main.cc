@@ -19,18 +19,17 @@
 
 using namespace brown;
 
-std::string* loadPortNums();
-void loadNeighbors();
 void validateInput(char* lowPort, char* highPort);
 void* launchClientInterface(void* args);
 
 int main(int argc, char** argv) {
-    std::string* portnums = loadPortNums();
-    loadNeighbors();
-
+    std::string* portnums = fileManager.readPortNumsFile(new std::string[2]);
     char* lowPort = (char*)portnums[0].c_str();
     char* highPort = (char*)portnums[1].c_str();
     validateInput(lowPort, highPort);
+
+    fileManager.readNeighborsFile(neighbors);
+
     initGlobals();
 
     server_connection serverConnection(atoi(lowPort), atoi(highPort));
@@ -47,19 +46,6 @@ int main(int argc, char** argv) {
     
     request_handler handler(serverConnection.getSocketDesc(), serverConnection.getPort());
     handler.serviceRequests();
-}
-
-std::string* loadPortNums() {
-    fileManager.openPortNumsFile();
-    std::string* portnums = fileManager.readPortNumsFile(new std::string[2]);
-    fileManager.closePortNumsFile();
-    return portnums;
-}
-
-void loadNeighbors() {
-    fileManager.openNeighborsFile();
-    fileManager.readNeighborsFile();
-    fileManager.closeNeighborsFile();
 }
 
 void validateInput(char* lowPort, char* highPort) {

@@ -20,12 +20,10 @@ namespace brown {
     static const int PORT_MAXIMUM = 65535;
 }
 extern pthread_mutex_t neighborsMutex;
-extern pthread_mutex_t neighborsFileMutex;
 extern std::vector<std::string> neighbors;
 extern brown::file_manager fileManager;
 extern void initGlobals();
 extern void appendToNeighborsVector(std::string neighbor);
-extern void appendToNeighborsFile(std::string neighbor);
 extern void printStringVector(std::vector<std::string> vector, std::string title, bool numbered);
 
 #endif /* GLOBALS_H_ */

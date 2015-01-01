@@ -1,14 +1,16 @@
 //
 // file_manager.cc
 //
-// Author: Jesse Rowland
-// Date: Oct 1, 2014
+// Author: Jordan Brown / Jesse Rowland
+// Date: Dec 31, 2014
 //
-// Handles file write/reads
+// Thread-safe class for handling file write/reads
 
 #include <string>
+#include <vector>
 #include <sstream>
 #include <fstream>
+#include <pthread.h>
 #include "globals.h"
 #include "file_manager.h"
 
@@ -17,7 +19,9 @@ namespace brown {
     const char* file_manager::NEIGHBORS_FILE_NAME = "config/neighbors.txt";
     const char* file_manager::CONTENT_FILE_DIRECTORY = "content";
 
-    file_manager::file_manager() { }
+    file_manager::file_manager() {
+        pthread_mutex_init(&neighborsFileMutex, NULL);
+    }
 
     void file_manager::openPortNumsFile() {
         portnumsFile.open(PORTNUMS_FILE_NAME);
@@ -25,7 +29,6 @@ namespace brown {
     
     void file_manager::closePortNumsFile() {
         portnumsFile.close();
-        return;
     }
     
     void file_manager::openNeighborsFile() {
@@ -35,42 +38,57 @@ namespace brown {
     
     void file_manager::closeNeighborsFile() {
         neighborsFile.close();
-        return;
+    }
+
+    void file_manager::openContentFile(std::string fileName) {
+        std::string path = std::string(CONTENT_FILE_DIRECTORY) + "/" + fileName;
+        contentFile.open(path.c_str());
+    }
+
+    void file_manager::closeContentFile() {
+        contentFile.close();
     }
     
     std::string* file_manager::readPortNumsFile(std::string ports[]) {
         std::string line;
+        openPortNumsFile();
         for(int i = 0; i < 2; i++)
         {
             getline(portnumsFile, line);
             ports[i] = line;
         }
+        closePortNumsFile();
         return ports;
     }
     
-    void file_manager::readNeighborsFile() {
+    void file_manager::readNeighborsFile(std::vector<std::string> &vector) {
         std::string line;
-        while(getline(neighborsFile, line)){
-            neighbors.push_back(line);
-        }
-        return;
+        pthread_mutex_lock(&neighborsFileMutex);
+            openNeighborsFile();
+            while(getline(neighborsFile, line)) {
+                vector.push_back(line);
+            }
+            closeNeighborsFile();
+        pthread_mutex_unlock(&neighborsFileMutex);
     }
     
     void file_manager::appendNeighborToFile(std::string neighbor) {
-        neighborsFile << neighbor;
-        neighborsFile << "\n";
-        return;
+        pthread_mutex_lock(&neighborsFileMutex);
+            openNeighborsFile();
+            neighborsFile << neighbor;
+            neighborsFile << "\n";
+            closeNeighborsFile();
+        pthread_mutex_unlock(&neighborsFileMutex);
     }
 
     std::string file_manager::readContentFile(std::string fileName) {
-        std::string path = std::string(CONTENT_FILE_DIRECTORY) + "/" + fileName;
-        contentFile.open(path.c_str());
+        openContentFile(fileName);
         if(!contentFile) {
             return "";
         } else {
             std::stringstream buffer;
             buffer << contentFile.rdbuf();
-            contentFile.close();
+            closeContentFile();
             return buffer.str();
         }
     }
