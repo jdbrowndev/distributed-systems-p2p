@@ -24,12 +24,12 @@ void* launchClientInterface(void* args);
 
 int main(int argc, char** argv) {
     std::string portnums[2];
-    fileManager.readPortNumsFile(portnums); 
+    fileManager.readPortNums(portnums); 
     char* lowPort = (char*)portnums[0].c_str();
     char* highPort = (char*)portnums[1].c_str();
     validateInput(lowPort, highPort);
 
-    initGlobals(fileManager.readNeighborsFile());
+    initGlobals(fileManager.readNeighbors());
 
     server_connection serverConnection(atoi(lowPort), atoi(highPort));
     serverConnection.openConnection();

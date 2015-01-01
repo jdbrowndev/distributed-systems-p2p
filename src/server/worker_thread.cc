@@ -73,7 +73,7 @@ namespace brown {
         } else if(strcasecmp(request.requestString, "lookup") == 0) {
             std::cout << "Server: Received request for content file \"" << request.payload
                     << "\" from client " << client << std::endl;
-            std::string fileContents = fileManager.readContentFile(std::string(request.payload));
+            std::string fileContents = fileManager.readContent(std::string(request.payload));
             if(fileContents.length() > 0) {
                 std::cout << "Server: Found content file \"" << request.payload
                         << "\" for client " << client << std::endl;
@@ -109,7 +109,7 @@ namespace brown {
         } else {
             std::cout << "Server: Received system ping request from client " << client << std::endl;
         }
-        std::string fileContents = isFileQuery ? fileManager.readContentFile(std::string(request.payload)) : "";
+        std::string fileContents = isFileQuery ? fileManager.readContent(std::string(request.payload)) : "";
         if(fileContents.length() > 0) {
             std::cout << "Server: Found content file \"" << request.payload
                     << "\" for client " << client << std::endl;
@@ -171,7 +171,7 @@ namespace brown {
     bool worker_thread::tryAppendNeighbor(std::string neighbor) {
         if(neighbors.contains(neighbor)) {
             neighbors.append(neighbor);
-            fileManager.appendNeighborToFile(neighbor);
+            fileManager.appendNeighbor(neighbor);
             return true;
         }
         return false;

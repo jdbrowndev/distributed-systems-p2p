@@ -54,7 +54,7 @@ namespace brown {
         getline(std::cin, port);
         std::string neighbor = host + ":" + port;
         neighbors.append(neighbor);
-        fileManager.appendNeighborToFile(neighbor);
+        fileManager.appendNeighbor(neighbor);
     }
 
     void client_interface::promptCommand() {

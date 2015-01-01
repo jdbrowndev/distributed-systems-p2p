@@ -34,10 +34,10 @@ namespace brown {
         void closeContentFile();
     public:
         file_manager();
-        void readPortNumsFile(std::string ports[]);
-        std::vector<std::string> readNeighborsFile();
-        void appendNeighborToFile(std::string neighbor);
-        std::string readContentFile(std::string fileName);
+        void readPortNums(std::string ports[]);
+        std::vector<std::string> readNeighbors();
+        void appendNeighbor(std::string neighbor);
+        std::string readContent(std::string fileName);
     };
 }
 

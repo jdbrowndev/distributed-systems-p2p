@@ -48,7 +48,7 @@ namespace brown {
         contentFile.close();
     }
     
-    void file_manager::readPortNumsFile(std::string ports[]) {
+    void file_manager::readPortNums(std::string ports[]) {
         std::string line;
         openPortNumsFile();
         for(int i = 0; i < 2; i++)
@@ -58,7 +58,7 @@ namespace brown {
         closePortNumsFile();
     }
     
-    std::vector<std::string> file_manager::readNeighborsFile() {
+    std::vector<std::string> file_manager::readNeighbors() {
         std::vector<std::string> output;
         std::string line;
         pthread_mutex_lock(&neighborsFileMutex);
@@ -71,7 +71,7 @@ namespace brown {
         return output;
     }
     
-    void file_manager::appendNeighborToFile(std::string neighbor) {
+    void file_manager::appendNeighbor(std::string neighbor) {
         pthread_mutex_lock(&neighborsFileMutex);
             openNeighborsFile();
             neighborsFile << neighbor;
@@ -80,7 +80,7 @@ namespace brown {
         pthread_mutex_unlock(&neighborsFileMutex);
     }
 
-    std::string file_manager::readContentFile(std::string fileName) {
+    std::string file_manager::readContent(std::string fileName) {
         openContentFile(fileName);
         if(!contentFile) {
             return "";
