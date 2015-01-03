@@ -9,6 +9,7 @@
 #ifndef REQUEST_HANDLER_H_
 #define REQUEST_HANDLER_H_
 
+#include <string>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
@@ -25,13 +26,13 @@ namespace brown {
             int connection;
             int port;
         };
-        char* port;
+        std::string port;
         int socketdesc;
         int connection;
         bool stepToPort();
         static void* launchWorkerThread(void*);
     public:
-        request_handler(int socketdesc, char* port);
+        request_handler(int socketdesc, std::string port);
         void serviceRequests();
     };
 }

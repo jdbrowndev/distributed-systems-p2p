@@ -7,6 +7,7 @@
 // Parent class for TCP/IP connections
 
 #include <stdlib.h>
+#include <string>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -20,10 +21,6 @@ namespace brown {
         socketdesc = 0;
     }
 
-    int network_connection::getSocketDesc() {
-        return socketdesc;
-    }
-
     bool network_connection::openSocket() {
         socketdesc = socket(AF_INET, SOCK_STREAM, 0);
         if (socketdesc < 0) {
@@ -33,8 +30,8 @@ namespace brown {
         return true;
     }
 
-    bool network_connection::setAddressInfo(char* host, char* port) {
-        if (getaddrinfo(host, port, NULL, &myinfo) != 0) {
+    bool network_connection::setAddressInfo(std::string host, std::string port) {
+        if (getaddrinfo(&host[0], &port[0], NULL, &myinfo) != 0) {
             std::cout << "Network: Error getting address" << std::endl;
             return false;
         }

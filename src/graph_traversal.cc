@@ -25,15 +25,15 @@ namespace brown {
         std::string fileContents = "";
         // Deep copying the neighbors vector is much safer than locking it
         // for the entire duration of the for loop.
-        std::vector<std::string> neighborsCopy = neighbors.copy();
+        std::vector<std::string> neighborsCopy; 
+        neighbors.copy(neighborsCopy);
         for(std::vector<std::string>::iterator it = neighborsCopy.begin(); it != neighborsCopy.end(); it++) {
             std::string neighbor = *it;
             // Query neighbor only if it is not in the visited list
             if(std::find(visited.begin(), visited.end(), neighbor) == visited.end()) {
                 neighbor_serializer::host_port_tokens neighborTokens = serializer.splitNeighbor(neighbor);
                 // Note: this connection is separate from the connection maintained by client_interface.cc
-                client_connection connection((char*)neighborTokens.host.c_str(),
-                        (char*)neighborTokens.port.c_str());
+                client_connection connection(neighborTokens.host, neighborTokens.port);
                 if(connection.openConnection()) {
                     visited.push_back(neighbor);
                     service_request response = sendTraverseRequest(connection, visited, fileName);
@@ -50,6 +50,7 @@ namespace brown {
     }
 
     // Precondition: connection must be valid and open
+    // TODO: refactor the char* casts
     service_request graph_traversal::sendTraverseRequest(client_connection &connection, 
             std::vector<std::string> &visited, std::string fileName) {
         connection.sendRequest(createServiceRequest(0, (char*)"", (char*)"", (char*)""));
@@ -61,6 +62,8 @@ namespace brown {
         return response;
     }
 
+    // TODO: refactoring is needed here... the method in client_interface.cc should be put into
+    // a separate class so that it can be called by both client_interface.cc and graph_traversal.cc
     service_request graph_traversal::createServiceRequest(int requestType, char* requestString, 
             char* payload, char* visitedString) {
         service_request request;

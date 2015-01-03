@@ -21,7 +21,7 @@
 #include "client_connection.h"
 
 namespace brown {
-    client_connection::client_connection(char* host, char* port):host(host),
+    client_connection::client_connection(std::string host, std::string port):host(host),
             port(port) { }
 
     bool client_connection::openConnection() {

@@ -9,6 +9,7 @@
 #ifndef SERVER_CONNECTION_H_
 #define SERVER_CONNECTION_H_
 
+#include <string>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -21,12 +22,11 @@ namespace brown {
     private:
         int lowPort;
         int highPort;
-        char* port;
         bool stepToPort();
     public:
         server_connection(int lowPort, int highPort);
+        std::string port;
         void openConnection();
-        char* getPort();
     };
 }
 

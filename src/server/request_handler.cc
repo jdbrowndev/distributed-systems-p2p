@@ -6,6 +6,7 @@
 //
 // Accepts and handles connections from other peers
 
+#include <string>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
@@ -23,7 +24,7 @@
 
 namespace brown {
 
-    request_handler::request_handler(int socketdesc, char* port): socketdesc(socketdesc),
+    request_handler::request_handler(int socketdesc, std::string port): socketdesc(socketdesc),
             port(port) { }
 
     void request_handler::serviceRequests() {
@@ -37,7 +38,7 @@ namespace brown {
                 pthread_t workerThread;
                 worker_thread_args wargs;
                 wargs.connection = connection;
-                wargs.port = atoi(port);
+                wargs.port = atoi(port.c_str());
                 pthread_create(&workerThread, NULL, launchWorkerThread, (void*)&wargs);
             }
         }

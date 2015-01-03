@@ -25,10 +25,10 @@ namespace brown {
             return "0";
         } else {
             std::stringstream outputStream;
-            int numNeighbors = (neighborsVector.size() <= max || max < 0) ? neighborsVector.size() : max;
-            outputStream << numNeighbors;
-            for(int i = 1; i <= numNeighbors; i++) {
-                host_port_tokens neighborTokens = splitNeighbor(neighborsVector.at(i-1));
+            int neighborsCount = (neighborsVector.size() <= max || max < 0) ? neighborsVector.size() : max;
+            outputStream << neighborsCount;
+            for(int i = 1; i <= neighborsCount; ++i) {
+                host_port_tokens neighborTokens = splitNeighbor(neighborsVector.at(i - 1));
                 outputStream << ";" << neighborTokens.host << ";" << neighborTokens.port;
             }
             return outputStream.str(); 
@@ -36,15 +36,15 @@ namespace brown {
     }
 
     std::vector<std::string> neighbor_serializer::decodeNeighbors(std::string neighborsString) {
+        std::stringstream tokenizer(neighborsString);
+        std::string neighborsCountStr, host, port;
+        getline(tokenizer, neighborsCountStr, ';');
+        int neighborsCount = atoi(neighborsCountStr.c_str());
         std::vector<std::string> output;
-        int neighborsCount = atoi(strtok((char*)neighborsString.c_str(), ";"));
-        std::stringstream strStream;
-        for(int i = 1; i <= neighborsCount; i++) {
-            char* host = strtok(NULL, ";");
-            char* port = strtok(NULL, ";");
-            strStream << host << ":" << port;
-            output.push_back(strStream.str());
-            strStream.str("");
+        for(int i = 1; i <= neighborsCount; ++i) {
+            getline(tokenizer, host, ';');
+            getline(tokenizer, port, ';');
+            output.push_back(host + ":" + port);
         }
         return output;
     }

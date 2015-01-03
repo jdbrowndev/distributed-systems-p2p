@@ -10,6 +10,7 @@
 #define CLIENT_CONNECTION_H_
 
 #include <stdlib.h>
+#include <string>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -23,12 +24,12 @@
 namespace brown {
     class client_connection : public network_connection {
     private:
-        char* host;
-        char* port;
+        std::string host;
+        std::string port;
         int connection;
         neighbor_serializer serializer;
     public:
-        client_connection(char* host, char* port);
+        client_connection(std::string host, std::string port);
         bool openConnection();
         void closeConnection();
         service_request sendRequest(service_request request);

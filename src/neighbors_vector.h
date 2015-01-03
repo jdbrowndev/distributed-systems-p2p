@@ -21,12 +21,12 @@ namespace brown {
         void init();
     public:
         neighbors_vector();
-        neighbors_vector(std::vector<std::string>);
+        neighbors_vector(std::vector<std::string> vector);
         std::string at(int index);
         void append(std::string neighbor);
         bool contains(std::string neighbor);
         int size();
-        std::vector<std::string> copy();
+        void copy(std::vector<std::string>& vector);
     };
 } /* namespace brown */
 

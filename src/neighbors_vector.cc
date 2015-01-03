@@ -55,7 +55,11 @@ namespace brown {
         return output;
     }
 
-    std::vector<std::string> neighbors_vector::copy() {
-        return neighbors;
+    void neighbors_vector::copy(std::vector<std::string>& vector) {
+        pthread_mutex_lock(&neighborsMutex);
+            for (std::vector<std::string>::iterator it = neighbors.begin(); it != neighbors.end(); ++it) {
+                vector.push_back(*it);
+            }
+        pthread_mutex_unlock(&neighborsMutex);
     }
 }

@@ -9,6 +9,7 @@
 #ifndef NETWORK_CONNECTION_H_
 #define NETWORK_CONNECTION_H_
 
+#include <string>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -18,13 +19,12 @@
 namespace brown {
     class network_connection {
     public:
-        int getSocketDesc();
-    protected:
         int socketdesc;
+    protected:
         addrinfo* myinfo;
         network_connection();
         bool openSocket();
-        bool setAddressInfo(char* host, char* port);
+        bool setAddressInfo(std::string host, std::string port);
     };
 }
 

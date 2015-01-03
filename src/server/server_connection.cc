@@ -22,9 +22,7 @@
 
 namespace brown {
     server_connection::server_connection(int lowPort, int highPort):
-            network_connection(), lowPort(lowPort), highPort(highPort) {
-        port = new char[PORT_MAX_LENGTH+1];
-    }
+            network_connection(), lowPort(lowPort), highPort(highPort) { }
 
     void server_connection::openConnection() {
         if (!openSocket()) {
@@ -47,21 +45,18 @@ namespace brown {
     }
 
     bool server_connection::stepToPort() {
+        char address[] = "0.0.0.0";
         int current = lowPort;
         while (current <= highPort) {
             char currentStr[PORT_MAX_LENGTH + 1] = "";
             sprintf(currentStr, "%d", current);
-            setAddressInfo((char*)"0.0.0.0", currentStr);
+            setAddressInfo(address, currentStr);
             if (bind(socketdesc, myinfo->ai_addr, myinfo->ai_addrlen) >= 0) {
-                strncpy(port, currentStr, PORT_MAX_LENGTH); // this copy is safe because port is 1 character longer
+                port = std::string(currentStr);
                 return true;
             }
             current++;
         }
         return false;
-    }
-
-    char* server_connection::getPort() {
-        return port;
     }
 }

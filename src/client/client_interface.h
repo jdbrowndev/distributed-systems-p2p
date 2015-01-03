@@ -20,14 +20,12 @@ namespace brown {
     private:
         const static int COMMAND_LIST_INDENT = 3;
         const static int COMMAND_LIST_SPACING = 8;
-        const static int FILE_NAME_MAX_LENGTH = 255;
         const static int MAX_NEIGHBORS_TO_SHARE = 3;
-        char* port; // The port this node is currently listening on
+        std::string port; // The port this node is currently listening on
         std::string command;
         int neighborId;
         client_connection connection;
         std::string server;
-        char fileName[FILE_NAME_MAX_LENGTH+1];
         std::map<std::string, std::string> commands;
         neighbor_serializer serializer;
         void promptForNeighbor();
@@ -41,25 +39,26 @@ namespace brown {
         void handleShareCommand();
         void runEntryQuery();
         void runPingQuery();
-        void runLookupQuery();
+        void runLookupQuery(std::string fileName);
         void runShareQuery();
         void runSystemQuery();
         void runExitQuery();
         void runSystemQuery(std::string fileName);
-        bool isList(char* str);
-        bool isSelect(char* str);
-        bool isFile(char* str);
-        bool isShare(char* str);
+        bool isList(std::string str);
+        bool isSelect(std::string str);
+        bool isFile(std::string str);
+        bool isShare(std::string str);
         void instantiateConnection();
         bool isNeighbor(int neighborID);
-        service_request createServiceRequest(int requestType, char* requestString, char* payload);
+        service_request createServiceRequest(int requestType, std::string requestString, 
+                std::string payload);
         void printListUsage();
         void printSelectUsage();
         void printFileUsage();
         void printShareUsage();
         void resetConnection();
     public:
-        client_interface(char* port);
+        client_interface(std::string port);
         void initialize();
     };
 }

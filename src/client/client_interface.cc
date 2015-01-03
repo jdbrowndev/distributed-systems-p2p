@@ -21,8 +21,7 @@
 #include "client_interface.h"
 
 namespace brown {
-    client_interface::client_interface(char* port): port(port), connection((char*)"", (char*)""), neighborId(0) {
-        fileName[FILE_NAME_MAX_LENGTH] = '\0';
+    client_interface::client_interface(std::string port): port(port), connection("", ""), neighborId(0) {
         commands["exit"] = "Exits the client interface but leaves the server running";
         commands["list"] = "Lists all neighbors known to this client or all nodes in the system (-s flag)";
         commands["select"] = "Selects a neighbor ID from the neighbors list for future communication";
@@ -46,7 +45,7 @@ namespace brown {
     }
 
     void client_interface::promptForNeighbor() {
-        std::cout << std::endl << "You have no neighbors. Please provide a host and port of a neighbor."
+        std::cout << "\nYou have no neighbors. Please provide a host and port of a neighbor."
                 << std::endl << "host>";
         std::string host, port;
         getline(std::cin, host);
@@ -65,50 +64,57 @@ namespace brown {
     void client_interface::parseCommand() {
         if(strcasecmp(command.c_str(), "help") == 0) {
             printCommands();
-        } else if(isList((char*)command.c_str())) {
+        } else if(isList(command)) {
             handleListCommand();
-        } else if(isSelect((char*)command.c_str())) {
+        } else if(isSelect(command)) {
             handleSelectCommand();
-        } else if(isFile((char*)command.c_str())) {
+        } else if(isFile(command)) {
             handleFileCommand();
-        } else if(isShare((char*)command.c_str())) {
+        } else if(isShare(command)) {
             handleShareCommand();
         } else if(strcasecmp(command.c_str(), "exit") == 0) {
             resetConnection();
-            std::cout << "Client exiting... the server will continue running until manually terminated"
-                    << std::endl << std::endl;
+            std::cout << "Client exiting... the server will continue running until manually terminated\n"
+                    << std::endl;
         } else {
             std::cout << "Command '" << command << "' not recognized." << std::endl;
         }
     }
 
     void client_interface::handleListCommand() {
-        char* cmd = strtok((char*)command.c_str(), " ");
-        char* systemFlag = strtok(NULL, " ");
+        std::stringstream tokenizer(command);
+        std::string cmd, arg1;
+        getline(tokenizer, cmd, ' ');
+        getline(tokenizer, arg1, ' ');
         
-        if(!systemFlag) {  //client-based list command
-            printStringVector(neighbors.copy(), "Neighbors", true);
-        } else if(strncmp(systemFlag, "-s", 2) == 0) { //system-based list command
+        if(arg1.length() == 0) {  // client-based list command
+            // TODO: do not copy the neighbors vector here
+            std::vector<std::string> neighborsCopy;
+            neighbors.copy(neighborsCopy);
+            printStringVector(neighborsCopy, "Neighbors", true);
+        } else if(strncmp(arg1.c_str(), "-s", 2) == 0) { // system-based list command
             runSystemQuery();
-        } else { //incorrect flag, print usage
+        } else { // incorrect flag, print usage
             printListUsage();
         }
     }
     
     void client_interface::handleSelectCommand() {
-        char* cmd = strtok((char*)command.c_str(), " ");
-        char* neighborIdArg = strtok(NULL, " ");
-        int neighborIdTmp;
+        std::stringstream tokenizer(command);
+        std::string cmd, neighborIdArg;
+        getline(tokenizer, cmd, ' ');
+        getline(tokenizer, neighborIdArg, ' ');
 
-        if(neighborIdArg) {
-            neighborIdTmp = atoi(neighborIdArg);
-            if(!isNeighbor(neighborIdTmp)) {
+        if(neighborIdArg.length() > 0) {
+            int neighborIdArgInt;
+            neighborIdArgInt = atoi(neighborIdArg.c_str());
+            if(!isNeighbor(neighborIdArgInt)) {
                 std::cout << "Client: The ID you provided is not assigned to a neighbor." << std::endl;
             } else {
                 // clean up old connection
                 resetConnection();
                 // attempt connection
-                neighborId = neighborIdTmp;
+                neighborId = neighborIdArgInt;
                 instantiateConnection();
                 if(connection.openConnection()) {
                     runEntryQuery();
@@ -125,22 +131,23 @@ namespace brown {
     }
 
     void client_interface::handleFileCommand() {
-        char* cmd = strtok((char*)command.c_str(), " ");
-        char* systemFlag = strtok(NULL, " ");
-        char* fileNameTmp = strtok(NULL, " ");
+        std::stringstream tokenizer(command);
+        std::string cmd, arg1, arg2;
+        getline(tokenizer, cmd, ' ');
+        getline(tokenizer, arg1, ' ');
+        getline(tokenizer, arg2, ' ');
         
-        if(systemFlag) { //there is a second parameter
-            if(strncmp(systemFlag, "-s", 2) == 0) {  //system wide flag is given
-                if(fileNameTmp) {   //filename given, correct syntax
-                    strncpy(fileName, fileNameTmp, FILE_NAME_MAX_LENGTH);
-                    runSystemQuery(std::string(fileName));
-                } else {    //filename not given, incorrect syntax
+        if(arg1.length() > 0) { // one arg minimum is required
+            if(strncmp(arg1.c_str(), "-s", 2) == 0) { // system wide flag is given
+                if(arg2.length() > 0) { // filename given, correct syntax
+                    runSystemQuery(arg2);
+                } else { // filename not given
                     printFileUsage();
                 }
-            } else if (!fileNameTmp && neighborId != 0) { //filename given, no system flag and a neighbor has been selected.
-                strncpy(fileName, systemFlag, FILE_NAME_MAX_LENGTH);
-                runLookupQuery();
-            } else {  //second parameter is unrecognized with filename, incorrect syntax
+            } else if (arg2.length() == 0 && neighborId > 0) { 
+                // arg1 is the filename (no arg2) AND a neighbor has been selected.
+                runLookupQuery(arg1);
+            } else { // bad syntax and/or no neighbor selected 
                 printFileUsage();
             }
         } else {
@@ -149,12 +156,10 @@ namespace brown {
     }
     
     void client_interface::handleShareCommand() {
-        char* cmd = strtok((char*)command.c_str(), " ");
-
-        if(neighborId == 0) { // if neighbor-id has never been given
-            printShareUsage();
-        } else {
+        if(neighborId > 0) {
             runShareQuery();
+        } else {
+            printShareUsage();
         }
     }
 
@@ -175,21 +180,23 @@ namespace brown {
     }
 
     void client_interface::runEntryQuery() {
-        connection.sendRequest(createServiceRequest(0, (char*)"", (char*)""));
+        connection.sendRequest(createServiceRequest(0, "", ""));
     }
 
     void client_interface::runPingQuery() {
-        connection.sendRequest(createServiceRequest(2, (char*)"ping", (char*)""));
+        connection.sendRequest(createServiceRequest(2, "ping", ""));
     }
     
-    void client_interface::runLookupQuery() {
-        connection.sendRequest(createServiceRequest(2, (char*)"lookup", fileName));
+    void client_interface::runLookupQuery(std::string fileName) {
+        connection.sendRequest(createServiceRequest(2, "lookup", fileName));
     }
 
     void client_interface::runShareQuery() {
-        connection.sendRequest(createServiceRequest(2, (char*)"ping", (char*)""));
-        connection.sendRequest(createServiceRequest(4, (char*)"neighbors",
-                (char*)serializer.encodeNeighbors(neighbors.copy(), MAX_NEIGHBORS_TO_SHARE).c_str()));
+        connection.sendRequest(createServiceRequest(2, "ping", ""));
+        std::vector<std::string> neighborsCopy;
+        neighbors.copy(neighborsCopy);
+        connection.sendRequest(createServiceRequest(4, "neighbors",
+                serializer.encodeNeighbors(neighborsCopy, MAX_NEIGHBORS_TO_SHARE).c_str()));
     }
     
     void client_interface::runSystemQuery() {
@@ -197,7 +204,7 @@ namespace brown {
     }
 
     void client_interface::runSystemQuery(std::string fileName) {
-        graph_traversal traversal(atoi(port));
+        graph_traversal traversal(atoi(port.c_str()));
         // Put my host:port into the initial visited list
         char domainName[256];
         gethostname(domainName, sizeof(domainName));
@@ -220,56 +227,60 @@ namespace brown {
     }
 
     void client_interface::runExitQuery() {
-        connection.sendRequest(createServiceRequest(1, (char*)"", (char*)""));
+        connection.sendRequest(createServiceRequest(1, "", ""));
     }
 
     void client_interface::instantiateConnection() {
-        server = neighbors.at(neighborId-1);
-        std::string neighbor = server.c_str(); // c_str() forces a deep copy
-        char* host = new char[HOST_MAX_LENGTH + 1];
-        char* port = new char[PORT_MAX_LENGTH + 1];
-        strncpy(host, strtok((char*)neighbor.c_str(), ":"), HOST_MAX_LENGTH);
-        strncpy(port, strtok(NULL, ":"), PORT_MAX_LENGTH);
-        connection = client_connection(host, port);
+        neighbor_serializer::host_port_tokens tokens = serializer.splitNeighbor(neighbors.at(neighborId-1));
+        connection = client_connection(tokens.host, tokens.port);
     }
 
-    bool client_interface::isList(char* str) {
+    bool client_interface::isList(std::string str) {
         regex_t queryRegex;
         regcomp(&queryRegex, "^list.*", 0);
-        return regexec(&queryRegex, str, 0, NULL, 0) == 0;
+        return regexec(&queryRegex, &str[0], 0, NULL, 0) == 0;
     }
     
-    bool client_interface::isSelect(char* str) {
+    bool client_interface::isSelect(std::string str) {
         regex_t queryRegex;
         regcomp(&queryRegex, "^select.*", 0);
-        return regexec(&queryRegex, str, 0, NULL, 0) == 0;
+        return regexec(&queryRegex, &str[0], 0, NULL, 0) == 0;
     }
     
-    bool client_interface::isFile(char* str) {
+    bool client_interface::isFile(std::string str) {
         regex_t queryRegex;
         regcomp(&queryRegex, "^file.*", 0);
-        return regexec(&queryRegex, str, 0, NULL, 0) == 0;
+        return regexec(&queryRegex, &str[0], 0, NULL, 0) == 0;
     }
     
-    bool client_interface::isShare(char* str) {
+    bool client_interface::isShare(std::string str) {
         regex_t queryRegex;
         regcomp(&queryRegex, "^share.*", 0);
-        return regexec(&queryRegex, str, 0, NULL, 0) == 0;
+        return regexec(&queryRegex, &str[0], 0, NULL, 0) == 0;
     }
 
     bool client_interface::isNeighbor(int id) {
         return id > 0 && id <= neighbors.size();
     }
 
-    service_request client_interface::createServiceRequest(int requestType, char* requestString, char* payload) {
+    service_request client_interface::createServiceRequest(int requestType, std::string requestString, 
+            std::string payload) {
+
         service_request request;
-        gethostname(request.domainName, sizeof(request.domainName));
-        request.portNumber = atoi(port);
         request.requestId = 0;
         request.requestType = requestType;
-        strncpy(request.requestString, requestString, sizeof(request.requestString));
-        strncpy(request.payload, payload, sizeof(request.payload));
-        strncpy(request.visited, "", sizeof(request.visited));
+        gethostname(request.domainName, sizeof(request.domainName));
+        request.portNumber = atoi(port.c_str());
+
+        // Fill strings with null character 
+        memset(&request.requestString[0], 0, sizeof(request.requestString));
+        memset(&request.payload[0], 0, sizeof(request.payload));
+        memset(&request.visited[0], 0, sizeof(request.visited));
+
+        // Copy strings
+        requestString.copy(request.requestString, sizeof(request.requestString) - 1, 0);
+        payload.copy(request.payload, sizeof(request.payload) - 1, 0);
+
         return request;
     }
     
@@ -299,7 +310,7 @@ namespace brown {
     }
 
     void client_interface::resetConnection() {
-        if(neighborId != 0) {
+        if(neighborId > 0) {
             std::cout << "Client: Closing previous connection with " << server << " ..." << std::endl;
             runExitQuery();
             connection.closeConnection();

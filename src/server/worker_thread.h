@@ -28,8 +28,8 @@ namespace brown {
         void handleClientQueryRequest();
         void handleClientShareRequest();
         void handleClientSystemQueryRequest();
-        void writeResponse(char* requestString, char* payload);
-        void writeResponse(char* requestString, char* payload, char* visited);
+        void writeResponse(std::string requestString, std::string payload);
+        void writeResponse(std::string requestString, std::string payload, std::string visited);
         void buildClientString();
         void appendSharedNeighbors();
         bool tryAppendNeighbor(std::string neighbor);

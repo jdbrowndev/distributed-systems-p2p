@@ -26,8 +26,8 @@ void* launchClientInterface(void* args);
 int main(int argc, char** argv) {
     std::string portnums[2];
     fileManager.readPortNums(portnums); 
-    char* lowPort = (char*)portnums[0].c_str();
-    char* highPort = (char*)portnums[1].c_str();
+    char* lowPort = &portnums[0][0];
+    char* highPort = &portnums[1][0];
     validateInput(lowPort, highPort);
 
     initGlobals(fileManager.readNeighbors());
@@ -38,14 +38,14 @@ int main(int argc, char** argv) {
     if(hasClientArg(argc, argv)) {
         pthread_t clientInterfaceThread;
         pthread_create(&clientInterfaceThread, NULL, launchClientInterface, 
-                (void*)serverConnection.getPort());
+                (void*)&serverConnection.port);
     }
     else {
         std::cout << "No command line parameter given, using server-only mode\n"
             << "The server will continue running until manually terminated\n" << std::endl;
     }
     
-    request_handler handler(serverConnection.getSocketDesc(), serverConnection.getPort());
+    request_handler handler(serverConnection.socketdesc, serverConnection.port);
     handler.serviceRequests();
 }
 
@@ -86,7 +86,7 @@ bool hasClientArg(int argc, char** argv) {
 }
 
 void* launchClientInterface(void* args) {
-    char* port = (char*)args;
+    std::string port = *((std::string*)args);
     client_interface interface(port);
     interface.initialize();
     pthread_exit(0);
