@@ -6,10 +6,13 @@
 //
 // A thread-safe vector for storing known neighbors
 
+#include <iostream>
+#include <sstream>
 #include <pthread.h>
 #include <vector>
 #include <string>
 #include <algorithm>
+#include "print_helper.h"
 #include "neighbors_vector.h"
 
 namespace brown {
@@ -61,5 +64,20 @@ namespace brown {
                 vector.push_back(*it);
             }
         pthread_mutex_unlock(&neighborsMutex);
+    }
+
+    void neighbors_vector::print() {
+        printHelper.printDecoratedTitle("Neighbors");
+        std::stringstream outputStream;
+        int counter = 1;
+        pthread_mutex_lock(&neighborsMutex);
+            for(std::vector<std::string>::iterator it = neighbors.begin();
+                    it != neighbors.end(); ++it) {
+                outputStream << counter << ". ";
+                counter++;
+                outputStream << *it << "\n";
+            }
+        pthread_mutex_unlock(&neighborsMutex);
+        std::cout << outputStream.str();
     }
 }

@@ -24,6 +24,5 @@ namespace brown {
 extern brown::neighbors_vector neighbors;
 extern brown::file_manager fileManager;
 extern void initGlobals(std::vector<std::string> initialNeighbors);
-extern void printStringVector(std::vector<std::string> vector, std::string title, bool numbered);
 
 #endif /* GLOBALS_H_ */

@@ -30,7 +30,7 @@ namespace brown {
     }
 
     void client_interface::initialize() {
-        printWelcomeMessage();
+        printHelper.printWelcomeMessage();
         if(neighbors.size() == 0) {
             promptForNeighbor();
         }
@@ -38,10 +38,6 @@ namespace brown {
             promptCommand();
             parseCommand();
         } while (strcasecmp(command.c_str(), "exit") != 0);
-    }
-
-    void client_interface::printWelcomeMessage() {
-        std::cout << "Client: CLI launched. Type 'help' for a list of commands." << std::endl;
     }
 
     void client_interface::promptForNeighbor() {
@@ -63,7 +59,7 @@ namespace brown {
 
     void client_interface::parseCommand() {
         if(strcasecmp(command.c_str(), "help") == 0) {
-            printCommands();
+            printHelper.printCommands(commands);
         } else if(isList(command)) {
             handleListCommand();
         } else if(isSelect(command)) {
@@ -88,14 +84,11 @@ namespace brown {
         getline(tokenizer, arg1, ' ');
         
         if(arg1.length() == 0) {  // client-based list command
-            // TODO: do not copy the neighbors vector here
-            std::vector<std::string> neighborsCopy;
-            neighbors.copy(neighborsCopy);
-            printStringVector(neighborsCopy, "Neighbors", true);
+            neighbors.print();
         } else if(strncmp(arg1.c_str(), "-s", 2) == 0) { // system-based list command
             runSystemQuery();
         } else { // incorrect flag, print usage
-            printListUsage();
+            printHelper.printListUsage();
         }
     }
     
@@ -126,7 +119,7 @@ namespace brown {
                 }
             }
         } else {
-            printSelectUsage();
+            printHelper.printSelectUsage();
         }
     }
 
@@ -142,16 +135,16 @@ namespace brown {
                 if(arg2.length() > 0) { // filename given, correct syntax
                     runSystemQuery(arg2);
                 } else { // filename not given
-                    printFileUsage();
+                    printHelper.printFileUsage();
                 }
             } else if (arg2.length() == 0 && neighborId > 0) { 
                 // arg1 is the filename (no arg2) AND a neighbor has been selected.
                 runLookupQuery(arg1);
             } else { // bad syntax and/or no neighbor selected 
-                printFileUsage();
+                printHelper.printFileUsage();
             }
         } else {
-            printFileUsage();
+            printHelper.printFileUsage();
         }
     }
     
@@ -159,24 +152,8 @@ namespace brown {
         if(neighborId > 0) {
             runShareQuery();
         } else {
-            printShareUsage();
+            printHelper.printShareUsage();
         }
-    }
-
-    void client_interface::printCommands() {
-        std::stringstream strStream;
-        strStream << "Commands:" << std::endl;
-        for(std::map<std::string, std::string>::iterator i = commands.begin(); i != commands.end(); i++) {
-            for(int spaces = 1; spaces <= COMMAND_LIST_INDENT; spaces++) {
-                strStream << " ";
-            }
-            strStream << i->first;
-            for(int spaces = 1; spaces <= COMMAND_LIST_SPACING - i->first.length(); spaces++) {
-                strStream << " ";
-            }
-            strStream << i->second << std::endl;
-        }
-        std::cout << strStream.str();
     }
 
     void client_interface::runEntryQuery() {
@@ -216,7 +193,11 @@ namespace brown {
         graph_traversal_result result = traversal.traverse(initialVisited, fileName);
         // If the query is a system-wide ping, print the results
         if(fileName.compare("") == 0) {
-            printStringVector(result.visited, "Network Nodes", false);
+            printHelper.printDecoratedTitle("Network Nodes");
+            for(std::vector<std::string>::iterator it = result.visited.begin(); it != result.visited.end();
+                    ++it) {
+                std::cout << *it << std::endl;
+            }
         // Else, if the query is system-wide file lookup, print not found if
         // no file was found (note: if file was found, client_connection.cc will
         // print the contents automatically
@@ -261,31 +242,6 @@ namespace brown {
 
     bool client_interface::isNeighbor(int id) {
         return id > 0 && id <= neighbors.size();
-    }
-
-    void client_interface::printListUsage() {
-        std::cout << "Usage: list [-s]" << std::endl;
-        std::cout << "   -s = flag to list all nodes in system." << std::endl;
-        std::cout << "Without -s, only known neighbors will be printed." << std::endl;
-    }
-    
-    void client_interface::printSelectUsage() {
-        std::cout << "Usage: select neighbor-id" << std::endl;
-        std::cout << "   neighbor-id = ID of a neighbor to select (see 'list' command)." << std::endl;
-        std::cout << "A ping request will be sent to the neighbor associated with the selected ID." << std::endl;
-    }
-    
-    void client_interface::printFileUsage() {
-        std::cout << "Usage: file [-s] filename" << std::endl;
-        std::cout << "   -s = flag to search all nodes in system." << std::endl;
-        std::cout << "   filename = File to search for." << std::endl;
-        std::cout << "File search will default to the selected neighbor if -s is not given." << std::endl;
-    }
-
-    void client_interface::printShareUsage() {
-        std::cout << "Usage: share" << std::endl;
-        std::cout << "Share request defaults to a selected neighbor." << std::endl;
-        std::cout << "A neighbor must be selected for the command to work correctly." << std::endl;
     }
 
     void client_interface::resetConnection() {

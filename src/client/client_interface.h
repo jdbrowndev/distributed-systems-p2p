@@ -13,13 +13,12 @@
 #include <string>
 #include "client_connection.h"
 #include "../neighbor_serializer.h"
+#include "../print_helper.h"
 #include "../service_request.h"
 
 namespace brown {
     class client_interface {
     private:
-        const static int COMMAND_LIST_INDENT = 3;
-        const static int COMMAND_LIST_SPACING = 8;
         const static int MAX_NEIGHBORS_TO_SHARE = 3;
         std::string port; // The port this node is currently listening on
         std::string command;
@@ -28,11 +27,10 @@ namespace brown {
         std::string server;
         std::map<std::string, std::string> commands;
         neighbor_serializer serializer;
+        print_helper printHelper;
         void promptForNeighbor();
         void promptCommand();
         void parseCommand();
-        void printWelcomeMessage();
-        void printCommands();
         void handleListCommand();
         void handleSelectCommand();
         void handleFileCommand();
@@ -50,10 +48,6 @@ namespace brown {
         bool isShare(std::string str);
         void instantiateConnection();
         bool isNeighbor(int neighborID);
-        void printListUsage();
-        void printSelectUsage();
-        void printFileUsage();
-        void printShareUsage();
         void resetConnection();
     public:
         client_interface(std::string port);

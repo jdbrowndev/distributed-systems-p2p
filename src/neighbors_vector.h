@@ -9,6 +9,7 @@
 #include <pthread.h>
 #include <vector>
 #include <string>
+#include "print_helper.h"
 
 #ifndef NEIGHBORS_VECTOR_H_
 #define NEIGHBORS_VECTOR_H_ 
@@ -18,6 +19,7 @@ namespace brown {
     private:
         std::vector<std::string> neighbors;
         pthread_mutex_t neighborsMutex;
+        print_helper printHelper;
         void init();
     public:
         neighbors_vector();
@@ -27,6 +29,7 @@ namespace brown {
         bool contains(std::string neighbor);
         int size();
         void copy(std::vector<std::string>& vector);
+        void print();
     };
 } /* namespace brown */
 
