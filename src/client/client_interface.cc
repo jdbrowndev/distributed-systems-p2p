@@ -180,23 +180,23 @@ namespace brown {
     }
 
     void client_interface::runEntryQuery() {
-        connection.sendRequest(createServiceRequest(0, "", ""));
+        connection.sendRequest(createServiceRequest(atoi(port.c_str()), 0));
     }
 
     void client_interface::runPingQuery() {
-        connection.sendRequest(createServiceRequest(2, "ping", ""));
+        connection.sendRequest(createServiceRequest(atoi(port.c_str()), 2, "ping"));
     }
     
     void client_interface::runLookupQuery(std::string fileName) {
-        connection.sendRequest(createServiceRequest(2, "lookup", fileName));
+        connection.sendRequest(createServiceRequest(atoi(port.c_str()), 2, "lookup", fileName));
     }
 
     void client_interface::runShareQuery() {
-        connection.sendRequest(createServiceRequest(2, "ping", ""));
+        connection.sendRequest(createServiceRequest(atoi(port.c_str()), 2, "ping"));
         std::vector<std::string> neighborsCopy;
         neighbors.copy(neighborsCopy);
-        connection.sendRequest(createServiceRequest(4, "neighbors",
-                serializer.encodeNeighbors(neighborsCopy, MAX_NEIGHBORS_TO_SHARE).c_str()));
+        connection.sendRequest(createServiceRequest(atoi(port.c_str()), 4, "neighbors",
+                serializer.encodeNeighbors(neighborsCopy, MAX_NEIGHBORS_TO_SHARE)));
     }
     
     void client_interface::runSystemQuery() {
@@ -227,7 +227,7 @@ namespace brown {
     }
 
     void client_interface::runExitQuery() {
-        connection.sendRequest(createServiceRequest(1, "", ""));
+        connection.sendRequest(createServiceRequest(atoi(port.c_str()), 1));
     }
 
     void client_interface::instantiateConnection() {
@@ -263,27 +263,6 @@ namespace brown {
         return id > 0 && id <= neighbors.size();
     }
 
-    service_request client_interface::createServiceRequest(int requestType, std::string requestString, 
-            std::string payload) {
-
-        service_request request;
-        request.requestId = 0;
-        request.requestType = requestType;
-        gethostname(request.domainName, sizeof(request.domainName));
-        request.portNumber = atoi(port.c_str());
-
-        // Fill strings with null character 
-        memset(&request.requestString[0], 0, sizeof(request.requestString));
-        memset(&request.payload[0], 0, sizeof(request.payload));
-        memset(&request.visited[0], 0, sizeof(request.visited));
-
-        // Copy strings
-        requestString.copy(request.requestString, sizeof(request.requestString) - 1, 0);
-        payload.copy(request.payload, sizeof(request.payload) - 1, 0);
-
-        return request;
-    }
-    
     void client_interface::printListUsage() {
         std::cout << "Usage: list [-s]" << std::endl;
         std::cout << "   -s = flag to list all nodes in system." << std::endl;

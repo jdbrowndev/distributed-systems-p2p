@@ -50,30 +50,12 @@ namespace brown {
     }
 
     // Precondition: connection must be valid and open
-    // TODO: refactor the char* casts
     service_request graph_traversal::sendTraverseRequest(client_connection &connection, 
             std::vector<std::string> &visited, std::string fileName) {
-        connection.sendRequest(createServiceRequest(0, (char*)"", (char*)"", (char*)""));
-        service_request response = connection.sendRequest(createServiceRequest(5,
-                fileName.length() > 0 ? (char*)"lookup" : (char*)"",
-                (char*)fileName.c_str(),
-                (char*)serializer.encodeNeighbors(visited).c_str()));
-        connection.sendRequest(createServiceRequest(1, (char*)"", (char*)"", (char*)""));
+        connection.sendRequest(createServiceRequest(port, 0));
+        service_request response = connection.sendRequest(createServiceRequest(port, 5,
+                fileName.length() > 0 ? "lookup" : "", fileName, serializer.encodeNeighbors(visited)));
+        connection.sendRequest(createServiceRequest(port, 1));
         return response;
-    }
-
-    // TODO: refactoring is needed here... the method in client_interface.cc should be put into
-    // a separate class so that it can be called by both client_interface.cc and graph_traversal.cc
-    service_request graph_traversal::createServiceRequest(int requestType, char* requestString, 
-            char* payload, char* visitedString) {
-        service_request request;
-        gethostname(request.domainName, sizeof(request.domainName));
-        request.portNumber = port;
-        request.requestId = 0;
-        request.requestType = requestType;
-        strncpy(request.requestString, requestString, sizeof(request.requestString));
-        strncpy(request.payload, payload, sizeof(request.payload));
-        strncpy(request.visited, visitedString, sizeof(request.visited));
-        return request;
     }
 }

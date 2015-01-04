@@ -50,8 +50,6 @@ namespace brown {
         bool isShare(std::string str);
         void instantiateConnection();
         bool isNeighbor(int neighborID);
-        service_request createServiceRequest(int requestType, std::string requestString, 
-                std::string payload);
         void printListUsage();
         void printSelectUsage();
         void printFileUsage();

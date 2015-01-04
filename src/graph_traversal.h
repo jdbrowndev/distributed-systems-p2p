@@ -28,8 +28,6 @@ namespace brown {
     private:
         int port; // The port this node is currently listening on
         neighbor_serializer serializer;
-        service_request createServiceRequest(int requestType, char* requestString, char* payload, 
-            char* visitedString);
         service_request sendTraverseRequest(client_connection &connection, std::vector<std::string> &visited,
             std::string fileName);
     public:

@@ -28,6 +28,8 @@ namespace brown {
         void handleClientQueryRequest();
         void handleClientShareRequest();
         void handleClientSystemQueryRequest();
+        void writeResponse();
+        void writeResponse(std::string requestString);
         void writeResponse(std::string requestString, std::string payload);
         void writeResponse(std::string requestString, std::string payload, std::string visited);
         void buildClientString();

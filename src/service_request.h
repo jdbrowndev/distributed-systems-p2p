@@ -9,16 +9,24 @@
 #ifndef SERVICE_REQUEST_H_
 #define SERVICE_REQUEST_H_
 
+#include <string>
+
 namespace brown {
     struct service_request {
         char domainName[256];
         int portNumber;
         int requestType;
         char requestString[32];
-        int requestId;
         char payload[256];
-        char visited[256]; // This will hold ~10 neighbors; increase capacity if more nodes exist in the network
+        char visited[256]; // This will hold ~10 neighbors
     };
+
+    extern service_request createServiceRequest(int port, int requestType);
+    extern service_request createServiceRequest(int port, int requestType, std::string requestString);
+    extern service_request createServiceRequest(int port, int requestType, std::string requestString, 
+            std::string payload); 
+    extern service_request createServiceRequest(int port, int requestType, std::string requestString,
+            std::string payload, std::string visited);
 }
 
 #endif /* SERVICE_REQUEST_H_ */

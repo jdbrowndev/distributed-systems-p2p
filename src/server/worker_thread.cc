@@ -57,19 +57,19 @@ namespace brown {
     void worker_thread::handleNewClientRequest() {
         std::cout << "Server: Received request from new client " << client << std::endl;
         tryAppendNeighbor(client);
-        writeResponse("", "");
+        writeResponse();
     }
 
     void worker_thread::handleClientExitRequest() {
         std::cout << "Server: Received exit request from client " << client << std::endl;
         exit = true;
-        writeResponse("", "");
+        writeResponse();
     }
 
     void worker_thread::handleClientQueryRequest() {
         if(strcasecmp(request.requestString, "ping") == 0) {
             std::cout << "Server: Received ping request from client " << client << std::endl;
-            writeResponse("alive", "");
+            writeResponse("alive");
         } else if(strcasecmp(request.requestString, "lookup") == 0) {
             std::cout << "Server: Received request for content file \"" << request.payload
                     << "\" from client " << client << std::endl;
@@ -81,11 +81,11 @@ namespace brown {
             } else {
                 std::cout << "Server: Could not find content file \"" << request.payload
                         << "\" for client " << client << std::endl;
-                writeResponse("not found", "");
+                writeResponse("not found");
             }
         } else {
             std::cout << "Server: Received query request from " << client << std::endl;
-            writeResponse("", "");
+            writeResponse();
         }
     }
 
@@ -93,11 +93,11 @@ namespace brown {
         if(strcasecmp(request.requestString, "neighbors") == 0) {
             std::cout << "Server: Received neighbor share request from client " << client << std::endl;
             appendSharedNeighbors();
-            writeResponse("thanks", "");
+            writeResponse("thanks");
         } else {
             std::cout << "Server: Received neighbor share request from client " << client
                     << ", but it is missing some information" << std::endl;
-            writeResponse("error", "");
+            writeResponse("error");
         }
     }
 
@@ -128,30 +128,21 @@ namespace brown {
         }
     }
 
+    void worker_thread::writeResponse() {
+        writeResponse("", "", "");
+    }
+
+    void worker_thread::writeResponse(std::string requestString) {
+        writeResponse(requestString, "", "");
+    }
+
     void worker_thread::writeResponse(std::string requestString, std::string payload) {
         writeResponse(requestString, payload, "");
     }
 
     void worker_thread::writeResponse(std::string requestString, std::string payload, std::string visited) {
-
-        service_request response;
-        response.requestId = 0;
-        response.requestType = 3;
-        gethostname(response.domainName, sizeof(response.domainName));
-        response.portNumber = port;
-
-        // Fill strings with null character 
-        memset(&response.requestString[0], 0, sizeof(response.requestString));
-        memset(&response.payload[0], 0, sizeof(response.payload));
-        memset(&response.visited[0], 0, sizeof(response.visited));
-
-        // Copy strings
-        requestString.copy(response.requestString, sizeof(response.requestString) - 1, 0);
-        payload.copy(response.payload, sizeof(response.payload) - 1, 0);
-        visited.copy(response.visited, sizeof(response.visited) - 1, 0);
-
+        service_request response = createServiceRequest(port, 3, requestString, payload, visited);
         write(connection, (char*)&response, sizeof(service_request));
-
         if(requestString.length() > 0) {
             std::cout << "Server: Response with message \"" << requestString << "\" sent to "
                     << client << std::endl;
@@ -159,6 +150,7 @@ namespace brown {
             std::cout << "Server: Response sent to " << client << std::endl;
         }
     }
+
 
     void worker_thread::buildClientString() {
         std::stringstream strStream;
