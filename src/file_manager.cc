@@ -61,7 +61,7 @@ namespace brown {
     void file_manager::readPortNums(std::string ports[]) {
         std::string line;
         openPortNumsFile();
-        for(int i = 0; i < 2; i++)
+        for(int i = 0; i < 2; ++i)
         {
             getline(portnumsFile, ports[i]);
         }

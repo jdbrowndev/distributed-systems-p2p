@@ -26,7 +26,7 @@ namespace brown {
         // Deep copying the neighbors vector is required to prevent deadlocks
         std::vector<std::string> neighborsCopy; 
         neighbors.copy(neighborsCopy);
-        for(std::vector<std::string>::iterator it = neighborsCopy.begin(); it != neighborsCopy.end(); it++) {
+        for(std::vector<std::string>::iterator it = neighborsCopy.begin(); it != neighborsCopy.end(); ++it) {
             std::string neighbor = *it;
             // Query neighbor only if it is not in the visited list
             if(std::find(visited.begin(), visited.end(), neighbor) == visited.end()) {

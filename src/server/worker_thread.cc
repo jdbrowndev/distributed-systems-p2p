@@ -161,7 +161,7 @@ namespace brown {
     void worker_thread::appendSharedNeighbors() {
         std::vector<std::string> sharedNeighbors = serializer.decodeNeighbors(request.payload);
         for(std::vector<std::string>::iterator it = sharedNeighbors.begin();
-                it != sharedNeighbors.end(); it++) {
+                it != sharedNeighbors.end(); ++it) {
             std::string neighbor = *it;
             if(!tryAppendNeighbor(neighbor)) {
                 std::cout << "Server: Cannot add " << neighbor << " to neighbors list: "

@@ -55,7 +55,7 @@ namespace brown {
                 port = std::string(currentStr);
                 return true;
             }
-            current++;
+            ++current;
         }
         return false;
     }
