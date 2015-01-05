@@ -22,6 +22,6 @@ using namespace brown;
 neighbors_vector neighbors;
 file_manager fileManager;
 
-void initGlobals(std::vector<std::string> initialNeighbors) {
-    neighbors = neighbors_vector(initialNeighbors);
+void initGlobals(std::vector<std::string>& initialNeighbors) {
+    neighbors = neighbors_vector(&initialNeighbors);
 }

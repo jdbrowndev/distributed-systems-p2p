@@ -23,8 +23,7 @@ namespace brown {
     graph_traversal_result graph_traversal::traverse(std::vector<std::string> visited, std::string 
             fileName) {
         std::string fileContents = "";
-        // Deep copying the neighbors vector is much safer than locking it
-        // for the entire duration of the for loop.
+        // Deep copying the neighbors vector is required to prevent deadlocks
         std::vector<std::string> neighborsCopy; 
         neighbors.copy(neighborsCopy);
         for(std::vector<std::string>::iterator it = neighborsCopy.begin(); it != neighborsCopy.end(); it++) {

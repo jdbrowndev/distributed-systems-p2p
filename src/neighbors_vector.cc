@@ -20,7 +20,8 @@ namespace brown {
         init();
     }
 
-    neighbors_vector::neighbors_vector(std::vector<std::string> vector):neighbors(vector) {
+    neighbors_vector::neighbors_vector(std::vector<std::string>* vectorPtr):neighborsPtr(vectorPtr) {
+        neighbors = *neighborsPtr;
         init();
     }
 

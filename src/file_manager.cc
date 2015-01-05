@@ -68,17 +68,17 @@ namespace brown {
         closePortNumsFile();
     }
     
-    std::vector<std::string> file_manager::readNeighbors() {
-        std::vector<std::string> output;
+    std::vector<std::string>& file_manager::readNeighbors() {
+        std::vector<std::string>* output = new std::vector<std::string>;
         std::string line;
         pthread_mutex_lock(&neighborsFileMutex);
             openNeighborsFile();
             while(getline(neighborsFile, line)) {
-                output.push_back(line);
+                (*output).push_back(line);
             }
             closeNeighborsFile();
         pthread_mutex_unlock(&neighborsFileMutex);
-        return output;
+        return *output;
     }
     
     void file_manager::appendNeighbor(std::string neighbor) {

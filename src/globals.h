@@ -23,6 +23,6 @@ namespace brown {
 }
 extern brown::neighbors_vector neighbors;
 extern brown::file_manager fileManager;
-extern void initGlobals(std::vector<std::string> initialNeighbors);
+extern void initGlobals(std::vector<std::string>& initialNeighbors);
 
 #endif /* GLOBALS_H_ */
