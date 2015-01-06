@@ -213,6 +213,7 @@ namespace brown {
 
     void client_interface::instantiateConnection() {
         neighbor_serializer::host_port_tokens tokens = serializer.splitNeighbor(neighbors.at(neighborId-1));
+        server = tokens.host + ":" + tokens.port;
         connection = client_connection(tokens.host, tokens.port);
     }
 
