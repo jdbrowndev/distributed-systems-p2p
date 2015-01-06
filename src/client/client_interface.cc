@@ -42,7 +42,7 @@ namespace brown {
 
     void client_interface::promptForNeighbor() {
         std::cout << "\nYou have no neighbors. Please provide a host and port of a neighbor."
-                << std::endl << "host>";
+            << std::endl << "host>";
         std::string host, port;
         getline(std::cin, host);
         std::cout << "port>";
@@ -71,7 +71,7 @@ namespace brown {
         } else if(strcasecmp(command.c_str(), "exit") == 0) {
             resetConnection();
             std::cout << "Client exiting... the server will continue running until manually terminated\n"
-                    << std::endl;
+                << std::endl;
         } else {
             std::cout << "Command '" << command << "' not recognized." << std::endl;
         }
@@ -82,7 +82,7 @@ namespace brown {
         std::string cmd, arg1;
         getline(tokenizer, cmd, ' ');
         getline(tokenizer, arg1, ' ');
-        
+
         if(arg1.length() == 0) {  // client-based list command
             neighbors.print();
         } else if(strncmp(arg1.c_str(), "-s", 2) == 0) { // system-based list command
@@ -91,7 +91,7 @@ namespace brown {
             printHelper.printListUsage();
         }
     }
-    
+
     void client_interface::handleSelectCommand() {
         std::stringstream tokenizer(command);
         std::string cmd, neighborIdArg;
@@ -115,7 +115,7 @@ namespace brown {
                 } else {
                     neighborId = 0;
                     std::cout << "Client: Could not connect to the neighbor you selected. "
-                            << "Please select a different neighbor." << std::endl;
+                        << "Please select a different neighbor." << std::endl;
                 }
             }
         } else {
@@ -129,7 +129,7 @@ namespace brown {
         getline(tokenizer, cmd, ' ');
         getline(tokenizer, arg1, ' ');
         getline(tokenizer, arg2, ' ');
-        
+
         if(arg1.length() > 0) { // one arg minimum is required
             if(strncmp(arg1.c_str(), "-s", 2) == 0) { // system wide flag is given
                 if(arg2.length() > 0) { // filename given, correct syntax
@@ -147,7 +147,7 @@ namespace brown {
             printHelper.printFileUsage();
         }
     }
-    
+
     void client_interface::handleShareCommand() {
         if(neighborId > 0) {
             runShareQuery();
@@ -163,7 +163,7 @@ namespace brown {
     void client_interface::runPingQuery() {
         connection.sendRequest(createServiceRequest(atoi(port.c_str()), 2, "ping"));
     }
-    
+
     void client_interface::runLookupQuery(std::string fileName) {
         connection.sendRequest(createServiceRequest(atoi(port.c_str()), 2, "lookup", fileName));
     }
@@ -173,9 +173,9 @@ namespace brown {
         std::vector<std::string> neighborsCopy;
         neighbors.copy(neighborsCopy);
         connection.sendRequest(createServiceRequest(atoi(port.c_str()), 4, "neighbors",
-                serializer.encodeNeighbors(neighborsCopy, MAX_NEIGHBORS_TO_SHARE)));
+                    serializer.encodeNeighbors(neighborsCopy, MAX_NEIGHBORS_TO_SHARE)));
     }
-    
+
     void client_interface::runSystemQuery() {
         runSystemQuery("");
     }
@@ -198,12 +198,12 @@ namespace brown {
                     ++it) {
                 std::cout << *it << std::endl;
             }
-        // Else, if the query is system-wide file lookup, print not found if
-        // no file was found (note: if file was found, client_connection.cc will
-        // print the contents automatically
+            // Else, if the query is system-wide file lookup, print not found if
+            // no file was found (note: if file was found, client_connection.cc will
+            // print the contents automatically
         } else if(result.fileContents.length() == 0) {
             std::cout << "Client: Could not find content file \"" << fileName << "\" in the system"
-                    << std::endl;
+                << std::endl;
         }
     }
 
@@ -221,19 +221,19 @@ namespace brown {
         regcomp(&queryRegex, "^list.*", 0);
         return regexec(&queryRegex, &str[0], 0, NULL, 0) == 0;
     }
-    
+
     bool client_interface::isSelect(std::string str) {
         regex_t queryRegex;
         regcomp(&queryRegex, "^select.*", 0);
         return regexec(&queryRegex, &str[0], 0, NULL, 0) == 0;
     }
-    
+
     bool client_interface::isFile(std::string str) {
         regex_t queryRegex;
         regcomp(&queryRegex, "^file.*", 0);
         return regexec(&queryRegex, &str[0], 0, NULL, 0) == 0;
     }
-    
+
     bool client_interface::isShare(std::string str) {
         regex_t queryRegex;
         regcomp(&queryRegex, "^share.*", 0);

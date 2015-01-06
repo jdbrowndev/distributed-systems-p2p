@@ -22,7 +22,7 @@
 
 namespace brown {
     server_connection::server_connection(int lowPort, int highPort):
-            network_connection(), lowPort(lowPort), highPort(highPort) { }
+        network_connection(), lowPort(lowPort), highPort(highPort) { }
 
     void server_connection::openConnection() {
         if (!openSocket()) {

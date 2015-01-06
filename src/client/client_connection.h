@@ -23,18 +23,18 @@
 
 namespace brown {
     class client_connection : public network_connection {
-    private:
-        std::string host;
-        std::string port;
-        int connection;
-        neighbor_serializer serializer;
-    public:
-        client_connection(std::string host, std::string port);
-        bool openConnection();
-        void closeConnection();
-        service_request sendRequest(service_request request);
-        void printRequestMessage(service_request request);
-        void printResponseMessage(service_request response);
+        private:
+            std::string host;
+            std::string port;
+            int connection;
+            neighbor_serializer serializer;
+        public:
+            client_connection(std::string host, std::string port);
+            bool openConnection();
+            void closeConnection();
+            service_request sendRequest(service_request request);
+            void printRequestMessage(service_request request);
+            void printResponseMessage(service_request response);
     };
 }
 

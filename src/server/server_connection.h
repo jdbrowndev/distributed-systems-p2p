@@ -19,14 +19,14 @@
 
 namespace brown {
     class server_connection : public network_connection {
-    private:
-        int lowPort;
-        int highPort;
-        bool stepToPort();
-    public:
-        server_connection(int lowPort, int highPort);
-        std::string port;
-        void openConnection();
+        private:
+            int lowPort;
+            int highPort;
+            bool stepToPort();
+        public:
+            server_connection(int lowPort, int highPort);
+            std::string port;
+            void openConnection();
     };
 }
 

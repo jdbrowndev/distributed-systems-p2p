@@ -25,7 +25,7 @@
 namespace brown {
 
     request_handler::request_handler(int socketdesc, std::string port): socketdesc(socketdesc),
-            port(port) { }
+        port(port) { }
 
     void request_handler::serviceRequests() {
         for(;;) {

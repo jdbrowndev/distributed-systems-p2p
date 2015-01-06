@@ -22,12 +22,12 @@
 
 namespace brown {
     client_connection::client_connection(std::string host, std::string port):host(host),
-            port(port) { }
+        port(port) { }
 
     bool client_connection::openConnection() {
         if(openSocket() && setAddressInfo(host, port)) {
             std::cout << "Client: Connecting to " << host << ":" << port
-                    << " ..." << std::endl;
+                << " ..." << std::endl;
             connection = connect(socketdesc, myinfo->ai_addr, myinfo->ai_addrlen);
             if (connection < 0) {
                 std::cout << "Client: Error in connect" << std::endl;
@@ -67,14 +67,14 @@ namespace brown {
             case 2:
                 if(strcasecmp(request.requestString, "ping") == 0) {
                     std::cout << "Client: Sent ping request (type 2) to "
-                            << host << ":" << port << std::endl;
+                        << host << ":" << port << std::endl;
                 } else if(strcasecmp(request.requestString, "lookup") == 0) {
                     std::cout << "Client: Sent lookup request (type 2) for content file \""
-                            << request.payload << "\" to "
-                            << host << ":" << port << std::endl;
+                        << request.payload << "\" to "
+                        << host << ":" << port << std::endl;
                 } else {
                     std::cout << "Client: Sent request (type 2) to "
-                            << host << ":" << port << std::endl;
+                        << host << ":" << port << std::endl;
                 }
                 break;
             case 4:
@@ -84,8 +84,8 @@ namespace brown {
             case 5:
                 if(strcasecmp(request.requestString, "lookup") == 0) {
                     std::cout << "Client: Sent system lookup request (type 5) for content file \""
-                            << request.payload << "\" to "
-                            << host << ":" << port << std::endl;
+                        << request.payload << "\" to "
+                        << host << ":" << port << std::endl;
                 } else {
                     std::cout << "Client: Sent system ping request (type 5) to " << host << ":"
                         << port << std::endl;
@@ -96,22 +96,22 @@ namespace brown {
     void client_connection::printResponseMessage(service_request response) {
         if((int)strlen(response.requestString) > 0) {
             std::cout << "Client: Received response (type 3) with message \""
-                    << response.requestString << "\" from " << host << ":" << port
-                    << std::endl;
+                << response.requestString << "\" from " << host << ":" << port
+                << std::endl;
             // If found, print special found message (system-wide lookups only)
             if(strcasecmp(response.requestString, "found") == 0 && strlen(response.visited) > 0) {
                 std::vector<std::string> visited = serializer.decodeNeighbors(response.visited);
                 std::cout << "Client: File found on node " << visited.at(visited.size()-1)
-                        << " (" << visited.size()-1 << " node(s) searched)" << std::endl;
+                    << " (" << visited.size()-1 << " node(s) searched)" << std::endl;
             }
             // If found, print file contents (any lookup)
             if(strcasecmp(response.requestString, "found") == 0) {
                 std::cout << "Client: File contents:\n\n"
-                        << response.payload << "<end of file>\n" << std::endl;
+                    << response.payload << "<end of file>\n" << std::endl;
             }
         } else {
             std::cout << "Client: Received response (type 3) from " << host << ":"
-                    << port << std::endl;
+                << port << std::endl;
         }
     }
 }

@@ -18,13 +18,13 @@
 
 namespace brown {
     class network_connection {
-    public:
-        int socketdesc;
-    protected:
-        addrinfo* myinfo;
-        network_connection();
-        bool openSocket();
-        bool setAddressInfo(std::string host, std::string port);
+        public:
+            int socketdesc;
+        protected:
+            addrinfo* myinfo;
+            network_connection();
+            bool openSocket();
+            bool setAddressInfo(std::string host, std::string port);
     };
 }
 

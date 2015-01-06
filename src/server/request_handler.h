@@ -21,19 +21,19 @@
 
 namespace brown {
     class request_handler {
-    private:
-        struct worker_thread_args {
+        private:
+            struct worker_thread_args {
+                int connection;
+                int port;
+            };
+            std::string port;
+            int socketdesc;
             int connection;
-            int port;
-        };
-        std::string port;
-        int socketdesc;
-        int connection;
-        bool stepToPort();
-        static void* launchWorkerThread(void*);
-    public:
-        request_handler(int socketdesc, std::string port);
-        void serviceRequests();
+            bool stepToPort();
+            static void* launchWorkerThread(void*);
+        public:
+            request_handler(int socketdesc, std::string port);
+            void serviceRequests();
     };
 }
 

@@ -16,21 +16,21 @@
 
 namespace brown {
     class neighbors_vector {
-    private:
-        std::vector<std::string>* neighborsPtr;
-        std::vector<std::string> neighbors;
-        pthread_mutex_t neighborsMutex;
-        print_helper printHelper;
-        void init();
-    public:
-        neighbors_vector();
-        neighbors_vector(std::vector<std::string>* vectorPtr);
-        std::string at(int index);
-        void append(std::string neighbor);
-        bool contains(std::string neighbor);
-        int size();
-        void copy(std::vector<std::string>& vector);
-        void print();
+        private:
+            std::vector<std::string>* neighborsPtr;
+            std::vector<std::string> neighbors;
+            pthread_mutex_t neighborsMutex;
+            print_helper printHelper;
+            void init();
+        public:
+            neighbors_vector();
+            neighbors_vector(std::vector<std::string>* vectorPtr);
+            std::string at(int index);
+            void append(std::string neighbor);
+            bool contains(std::string neighbor);
+            int size();
+            void copy(std::vector<std::string>& vector);
+            void print();
     };
 } /* namespace brown */
 

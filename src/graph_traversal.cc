@@ -53,7 +53,7 @@ namespace brown {
             std::vector<std::string> &visited, std::string fileName) {
         connection.sendRequest(createServiceRequest(port, 0));
         service_request response = connection.sendRequest(createServiceRequest(port, 5,
-                fileName.length() > 0 ? "lookup" : "", fileName, serializer.encodeNeighbors(visited)));
+                    fileName.length() > 0 ? "lookup" : "", fileName, serializer.encodeNeighbors(visited)));
         connection.sendRequest(createServiceRequest(port, 1));
         return response;
     }

@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
         std::cout << "No command line parameter given, using server-only mode\n"
             << "The server will continue running until manually terminated\n" << std::endl;
     }
-    
+
     request_handler handler(serverConnection.socketdesc, serverConnection.port);
     handler.serviceRequests();
 }
@@ -54,21 +54,21 @@ void validateInput(char* lowPort, char* highPort) {
     int highPortInt = atoi(highPort);
     if(strlen(lowPort) == 0 || strlen(highPort) == 0) {
         std::cout << "portnums: The file must provide lower and upper port boundaries"
-                << std::endl;
+            << std::endl;
         exit(0);
     }
     if(lowPortInt > highPortInt) {
         std::cout << "portnums: The lower port boundary must be less than the higher port boundary"
-                << std::endl;
+            << std::endl;
         exit(0);
     }
     if(lowPortInt < PORT_MINIMUM || highPortInt < PORT_MINIMUM) {
         std::cout << "portnums: Port number boundaries must be greater than or equal to "
-                << PORT_MINIMUM << std::endl;
+            << PORT_MINIMUM << std::endl;
         exit(0);
     } else if (lowPortInt > PORT_MAXIMUM || highPortInt > PORT_MAXIMUM) {
         std::cout << "portnums: Port number boundaries must be less than or equal to "
-                << PORT_MAXIMUM << std::endl;
+            << PORT_MAXIMUM << std::endl;
         exit(0);
     }
 }

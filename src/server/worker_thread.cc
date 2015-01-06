@@ -72,15 +72,15 @@ namespace brown {
             writeResponse("alive");
         } else if(strcasecmp(request.requestString, "lookup") == 0) {
             std::cout << "Server: Received request for content file \"" << request.payload
-                    << "\" from client " << client << std::endl;
+                << "\" from client " << client << std::endl;
             std::string fileContents = fileManager.readContent(std::string(request.payload));
             if(fileContents.length() > 0) {
                 std::cout << "Server: Found content file \"" << request.payload
-                        << "\" for client " << client << std::endl;
+                    << "\" for client " << client << std::endl;
                 writeResponse("found", fileContents);
             } else {
                 std::cout << "Server: Could not find content file \"" << request.payload
-                        << "\" for client " << client << std::endl;
+                    << "\" for client " << client << std::endl;
                 writeResponse("not found");
             }
         } else {
@@ -96,7 +96,7 @@ namespace brown {
             writeResponse("thanks");
         } else {
             std::cout << "Server: Received neighbor share request from client " << client
-                    << ", but it is missing some information" << std::endl;
+                << ", but it is missing some information" << std::endl;
             writeResponse("error");
         }
     }
@@ -105,14 +105,14 @@ namespace brown {
         bool isFileQuery = strcasecmp(request.requestString, "lookup") == 0;
         if(isFileQuery) {
             std::cout << "Server: Received system lookup request for content file \"" << request.payload
-                    << "\" from client " << client << std::endl;
+                << "\" from client " << client << std::endl;
         } else {
             std::cout << "Server: Received system ping request from client " << client << std::endl;
         }
         std::string fileContents = isFileQuery ? fileManager.readContent(std::string(request.payload)) : "";
         if(fileContents.length() > 0) {
             std::cout << "Server: Found content file \"" << request.payload
-                    << "\" for client " << client << std::endl;
+                << "\" for client " << client << std::endl;
             writeResponse("found", fileContents, request.visited);
         } else {
             graph_traversal traversal(port);
@@ -120,10 +120,10 @@ namespace brown {
                     std::string(request.payload));
             if(result.fileContents.length() > 0) {
                 writeResponse("found", result.fileContents, 
-                    serializer.encodeNeighbors(result.visited));
+                        serializer.encodeNeighbors(result.visited));
             } else {
                 writeResponse(isFileQuery ? "not found" : "", "",
-                    serializer.encodeNeighbors(result.visited));
+                        serializer.encodeNeighbors(result.visited));
             }
         }
     }
@@ -145,7 +145,7 @@ namespace brown {
         write(connection, (char*)&response, sizeof(service_request));
         if(requestString.length() > 0) {
             std::cout << "Server: Response with message \"" << requestString << "\" sent to "
-                    << client << std::endl;
+                << client << std::endl;
         } else {
             std::cout << "Server: Response sent to " << client << std::endl;
         }
@@ -165,7 +165,7 @@ namespace brown {
             std::string neighbor = *it;
             if(!tryAppendNeighbor(neighbor)) {
                 std::cout << "Server: Cannot add " << neighbor << " to neighbors list: "
-                        << neighbor << " is already in the list" << std::endl;
+                    << neighbor << " is already in the list" << std::endl;
             }
         }
     }
