@@ -18,7 +18,7 @@ namespace brown {
         int requestType;
         char requestString[32];
         char payload[256];
-        char visited[256]; // This will hold ~10 neighbors
+        char visited[256]; 
     };
 
     extern service_request createServiceRequest(int port, int requestType);

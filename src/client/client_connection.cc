@@ -98,16 +98,19 @@ namespace brown {
             std::cout << "Client: Received response (type 3) with message \""
                 << response.requestString << "\" from " << host << ":" << port
                 << std::endl;
-            // If found, print special found message (system-wide lookups only)
-            if(strcasecmp(response.requestString, "found") == 0 && strlen(response.visited) > 0) {
+            bool foundFile = strcasecmp(response.requestString, "found") == 0;
+            bool foundFileSystemWide = foundFile && strlen(response.visited) > 0;
+            if(foundFileSystemWide) {
                 std::vector<std::string> visited = serializer.decodeNeighbors(response.visited);
                 std::cout << "Client: File found on node " << visited.at(visited.size()-1)
                     << " (" << visited.size()-1 << " node(s) searched)" << std::endl;
             }
-            // If found, print file contents (any lookup)
-            if(strcasecmp(response.requestString, "found") == 0) {
+            if(foundFile) {
                 std::cout << "Client: File contents:\n\n"
-                    << response.payload << "<end of file>\n" << std::endl;
+                    << response.payload << "<end of file>" << std::endl;
+            }
+            if(foundFileSystemWide) {
+                std::cout << std::endl;
             }
         } else {
             std::cout << "Client: Received response (type 3) from " << host << ":"
