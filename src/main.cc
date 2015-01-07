@@ -12,9 +12,9 @@
 #include <pthread.h>
 #include <string>
 #include "globals.h"
-#include "server/request_handler.h"
-#include "server/server_connection.h"
-#include "client/client_interface.h"
+#include "request_handler.h"
+#include "server_connection.h"
+#include "client_interface.h"
 #include "service_request.h"
 
 using namespace brown;

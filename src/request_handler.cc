@@ -18,7 +18,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <pthread.h>
-#include "../globals.h"
+#include "globals.h"
 #include "worker_thread.h"
 #include "request_handler.h"
 

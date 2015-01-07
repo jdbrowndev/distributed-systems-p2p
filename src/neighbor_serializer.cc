@@ -25,7 +25,8 @@ namespace brown {
             return "0";
         } else {
             std::stringstream outputStream;
-            int neighborsCount = (neighborsVector.size() <= max || max < 0) ? neighborsVector.size() : max;
+            int neighborsCount = 
+                ((signed)neighborsVector.size() <= max || max < 0) ? (signed)neighborsVector.size() : max;
             outputStream << neighborsCount;
             for(int i = 1; i <= neighborsCount; ++i) {
                 host_port_tokens neighborTokens = splitNeighbor(neighborsVector.at(i - 1));

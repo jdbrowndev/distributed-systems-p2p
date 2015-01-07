@@ -11,7 +11,7 @@
 
 #include <string>
 #include <vector>
-#include "client/client_connection.h"
+#include "client_connection.h"
 #include "service_request.h"
 #include "neighbor_serializer.h"
 #include "globals.h"

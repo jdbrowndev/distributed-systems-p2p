@@ -11,7 +11,7 @@
 #include <vector>
 #include <algorithm>
 #include <pthread.h>
-#include "client/client_connection.h"
+#include "client_connection.h"
 #include "globals.h"
 #include "neighbor_serializer.h"
 #include "service_request.h"

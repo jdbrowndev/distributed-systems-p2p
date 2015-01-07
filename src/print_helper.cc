@@ -54,15 +54,15 @@ namespace brown {
     void print_helper::printCommands(std::map<std::string, std::string>& commands) {
         std::stringstream outputStream;
         outputStream << "Commands:" << std::endl;
-        for(std::map<std::string, std::string>::iterator i = commands.begin(); i != commands.end(); ++i) {
+        for(std::map<std::string, std::string>::iterator it = commands.begin(); it != commands.end(); ++it) {
             for(int spaces = 1; spaces <= COMMAND_LIST_INDENT; ++spaces) {
                 outputStream << " ";
             }
-            outputStream << i->first;
-            for(int spaces = 1; spaces <= COMMAND_LIST_SPACING - i->first.length(); ++spaces) {
+            outputStream << it->first;
+            for(int spaces = 1; spaces <= COMMAND_LIST_SPACING - (signed)it->first.length(); ++spaces) {
                 outputStream << " ";
             }
-            outputStream << i->second << std::endl;
+            outputStream << it->second << std::endl;
         }
         std::cout << outputStream.str();
     }

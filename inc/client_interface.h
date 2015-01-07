@@ -12,9 +12,9 @@
 #include <map>
 #include <string>
 #include "client_connection.h"
-#include "../neighbor_serializer.h"
-#include "../print_helper.h"
-#include "../service_request.h"
+#include "neighbor_serializer.h"
+#include "print_helper.h"
+#include "service_request.h"
 
 namespace brown {
     class client_interface {
@@ -22,8 +22,8 @@ namespace brown {
             const static int MAX_NEIGHBORS_TO_SHARE = 3;
             std::string port; // The port this node is currently listening on
             std::string command;
-            int neighborId;
             client_connection connection;
+            int neighborId;
             std::string server;
             std::map<std::string, std::string> commands;
             neighbor_serializer serializer;

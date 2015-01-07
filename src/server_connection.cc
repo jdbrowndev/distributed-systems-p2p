@@ -16,8 +16,8 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <iostream>
-#include "../network_connection.h"
-#include "../globals.h"
+#include "network_connection.h"
+#include "globals.h"
 #include "server_connection.h"
 
 namespace brown {

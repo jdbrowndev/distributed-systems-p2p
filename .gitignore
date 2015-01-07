@@ -1,7 +1,8 @@
 .cproject
 .project
-bin/*.o
-bin/main
+obj/*.o
+obj/*.d
+bin/peer
 config/*
 !config/empty
 content/*

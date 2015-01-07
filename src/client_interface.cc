@@ -15,9 +15,9 @@
 #include <algorithm>
 #include <regex.h>
 #include "client_connection.h"
-#include "../graph_traversal.h"
-#include "../globals.h"
-#include "../service_request.h"
+#include "graph_traversal.h"
+#include "globals.h"
+#include "service_request.h"
 #include "client_interface.h"
 
 namespace brown {

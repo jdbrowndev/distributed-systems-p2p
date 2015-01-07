@@ -17,9 +17,9 @@
 #include <vector>
 #include <sstream>
 #include <algorithm>
-#include "../graph_traversal.h"
-#include "../globals.h"
-#include "../service_request.h"
+#include "graph_traversal.h"
+#include "globals.h"
+#include "service_request.h"
 #include "worker_thread.h"
 
 namespace brown {

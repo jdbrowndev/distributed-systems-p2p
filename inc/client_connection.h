@@ -17,9 +17,9 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
-#include "../network_connection.h"
-#include "../neighbor_serializer.h"
-#include "../service_request.h"
+#include "network_connection.h"
+#include "neighbor_serializer.h"
+#include "service_request.h"
 
 namespace brown {
     class client_connection : public network_connection {

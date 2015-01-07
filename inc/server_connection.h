@@ -15,7 +15,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
-#include "../network_connection.h"
+#include "network_connection.h"
 
 namespace brown {
     class server_connection : public network_connection {

@@ -17,7 +17,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
-#include "../service_request.h"
+#include "service_request.h"
 
 namespace brown {
     class request_handler {
@@ -26,8 +26,8 @@ namespace brown {
                 int connection;
                 int port;
             };
-            std::string port;
             int socketdesc;
+            std::string port;
             int connection;
             bool stepToPort();
             static void* launchWorkerThread(void*);

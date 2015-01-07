@@ -15,9 +15,9 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <iostream>
-#include "../network_connection.h"
-#include "../neighbor_serializer.h"
-#include "../service_request.h"
+#include "network_connection.h"
+#include "neighbor_serializer.h"
+#include "service_request.h"
 #include "client_connection.h"
 
 namespace brown {

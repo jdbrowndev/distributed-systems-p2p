@@ -10,8 +10,8 @@
 #define WORKER_THREAD_H_
 
 #include <string>
-#include "../neighbor_serializer.h"
-#include "../service_request.h"
+#include "neighbor_serializer.h"
+#include "service_request.h"
 
 namespace brown {
     class worker_thread {
