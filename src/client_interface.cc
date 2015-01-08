@@ -198,9 +198,9 @@ namespace brown {
                     ++it) {
                 std::cout << *it << std::endl;
             }
-            // Else, if the query is system-wide file lookup, print not found if
-            // no file was found (note: if file was found, client_connection.cc will
-            // print the contents automatically
+        // Else, if the query is system-wide file lookup, print not found if
+        // no file was found (note: if file was found, client_connection.cc will
+        // print the contents automatically
         } else if(result.fileContents.length() == 0) {
             std::cout << "Client: Could not find content file \"" << fileName << "\" in the system"
                 << std::endl;

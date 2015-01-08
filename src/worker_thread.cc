@@ -116,7 +116,9 @@ namespace brown {
             writeResponse("found", fileContents, request.visited);
         } else {
             graph_traversal traversal(port);
-            graph_traversal_result result = traversal.traverse(serializer.decodeNeighbors(request.visited),
+            std::vector<std::string> decodedVisited;
+            serializer.decodeNeighbors(request.visited, decodedVisited);
+            graph_traversal_result result = traversal.traverse(decodedVisited,
                     std::string(request.payload));
             if(result.fileContents.length() > 0) {
                 writeResponse("found", result.fileContents, 
@@ -159,7 +161,8 @@ namespace brown {
     }
 
     void worker_thread::appendSharedNeighbors() {
-        std::vector<std::string> sharedNeighbors = serializer.decodeNeighbors(request.payload);
+        std::vector<std::string> sharedNeighbors;
+        serializer.decodeNeighbors(request.payload, sharedNeighbors);
         for(std::vector<std::string>::iterator it = sharedNeighbors.begin();
                 it != sharedNeighbors.end(); ++it) {
             std::string neighbor = *it;

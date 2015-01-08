@@ -1,8 +1,9 @@
 .cproject
 .project
-obj/*.o
-obj/*.d
+.ycm*
 bin/peer
+obj/*
+!obj/empty
 config/*
 !config/empty
 content/*

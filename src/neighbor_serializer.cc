@@ -16,11 +16,11 @@
 #include "neighbor_serializer.h"
 
 namespace brown {
-    std::string neighbor_serializer::encodeNeighbors(std::vector<std::string> neighborsVector) {
+    std::string neighbor_serializer::encodeNeighbors(std::vector<std::string>& neighborsVector) {
         return encodeNeighbors(neighborsVector, -1);
     }
 
-    std::string neighbor_serializer::encodeNeighbors(std::vector<std::string> neighborsVector, int max) {
+    std::string neighbor_serializer::encodeNeighbors(std::vector<std::string>& neighborsVector, int max) {
         if (neighborsVector.size() == 0) {
             return "0";
         } else {
@@ -36,18 +36,16 @@ namespace brown {
         }
     }
 
-    std::vector<std::string> neighbor_serializer::decodeNeighbors(std::string neighborsString) {
+    void neighbor_serializer::decodeNeighbors(std::string neighborsString, std::vector<std::string>& out) {
         std::stringstream tokenizer(neighborsString);
         std::string neighborsCountStr, host, port;
         getline(tokenizer, neighborsCountStr, ';');
         int neighborsCount = atoi(neighborsCountStr.c_str());
-        std::vector<std::string> output;
         for(int i = 1; i <= neighborsCount; ++i) {
             getline(tokenizer, host, ';');
             getline(tokenizer, port, ';');
-            output.push_back(host + ":" + port);
+            out.push_back(host + ":" + port);
         }
-        return output;
     }
 
     neighbor_serializer::host_port_tokens neighbor_serializer::splitNeighbor(std::string neighbor) {

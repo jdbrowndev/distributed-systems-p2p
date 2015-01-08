@@ -20,9 +20,9 @@ namespace brown {
                 std::string host;
                 std::string port;
             };
-            std::string encodeNeighbors(std::vector<std::string> neighborsVector);
-            std::string encodeNeighbors(std::vector<std::string> neighborsVector, int max);
-            std::vector<std::string> decodeNeighbors(std::string neighborsString);
+            std::string encodeNeighbors(std::vector<std::string>& neighborsVector);
+            std::string encodeNeighbors(std::vector<std::string>& neighborsVector, int max);
+            void decodeNeighbors(std::string neighborsString, std::vector<std::string>& out);
             host_port_tokens splitNeighbor(std::string neighbor);
     };
 } /* namespace brown */

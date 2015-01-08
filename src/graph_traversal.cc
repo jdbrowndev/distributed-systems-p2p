@@ -20,7 +20,7 @@
 namespace brown {
     graph_traversal::graph_traversal(int port):port(port) { }
 
-    graph_traversal_result graph_traversal::traverse(std::vector<std::string> visited, std::string 
+    graph_traversal_result graph_traversal::traverse(std::vector<std::string>& visited, std::string 
             fileName) {
         std::string fileContents = "";
         // Deep copying the neighbors vector is required to prevent deadlocks
@@ -37,7 +37,8 @@ namespace brown {
                     visited.push_back(neighbor);
                     service_request response = sendTraverseRequest(connection, visited, fileName);
                     connection.closeConnection();
-                    visited = serializer.decodeNeighbors(std::string(response.visited));
+                    visited.clear();
+                    serializer.decodeNeighbors(std::string(response.visited), visited);
                     if(strcasecmp(response.requestString, "found") == 0) {
                         fileContents = std::string(response.payload);
                         break;
@@ -49,8 +50,8 @@ namespace brown {
     }
 
     // Precondition: connection must be valid and open
-    service_request graph_traversal::sendTraverseRequest(client_connection &connection, 
-            std::vector<std::string> &visited, std::string fileName) {
+    service_request graph_traversal::sendTraverseRequest(client_connection& connection, 
+            std::vector<std::string>& visited, std::string fileName) {
         connection.sendRequest(createServiceRequest(port, 0));
         service_request response = connection.sendRequest(createServiceRequest(port, 5,
                     fileName.length() > 0 ? "lookup" : "", fileName, serializer.encodeNeighbors(visited)));

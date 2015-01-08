@@ -1,3 +1,11 @@
+//
+// print_helper.cc
+//
+// Author: Jordan Brown
+// Date: Jan 7, 2014
+//
+// Contains methods for printing common messages
+
 #include <iostream>
 #include <sstream>
 #include "print_helper.h"

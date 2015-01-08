@@ -1,3 +1,11 @@
+//
+// print_helper.h
+//
+// Author: Jordan Brown
+// Date: Jan 7, 2014
+//
+// Contains methods for printing common messages
+
 #ifndef PRINT_HELPER_H_
 #define PRINT_HELPER_H_ 
 

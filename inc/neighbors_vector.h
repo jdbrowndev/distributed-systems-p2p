@@ -29,7 +29,7 @@ namespace brown {
             void append(std::string neighbor);
             bool contains(std::string neighbor);
             int size();
-            void copy(std::vector<std::string>& vector);
+            void copy(std::vector<std::string>& out);
             void print();
     };
 } /* namespace brown */

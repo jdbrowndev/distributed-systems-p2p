@@ -101,9 +101,10 @@ namespace brown {
             bool foundFile = strcasecmp(response.requestString, "found") == 0;
             bool foundFileSystemWide = foundFile && strlen(response.visited) > 0;
             if(foundFileSystemWide) {
-                std::vector<std::string> visited = serializer.decodeNeighbors(response.visited);
-                std::cout << "Client: File found on node " << visited.at(visited.size()-1)
-                    << " (" << visited.size()-1 << " node(s) searched)" << std::endl;
+                std::vector<std::string> decodedVisited;
+                serializer.decodeNeighbors(response.visited, decodedVisited);
+                std::cout << "Client: File found on node " << decodedVisited.at(decodedVisited.size()-1)
+                    << " (" << decodedVisited.size()-1 << " node(s) searched)" << std::endl;
             }
             if(foundFile) {
                 std::cout << "Client: File contents:\n\n"
