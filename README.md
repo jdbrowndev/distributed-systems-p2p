@@ -21,16 +21,16 @@ This C/C++ program can be used to start a simple peer-to-peer network. It was de
 
 # Installation
 
-You will need g++ 4.4.7 or an equivalent compiler that supports the C++03 standard. Pthreads is the only external library required and should be installed by default on most operating systems.
+To compile the program, you will need g++ 4.4.7 or an equivalent compiler that supports the C++03 standard. Pthreads is the only external library required and should be installed by default on most operating systems.
 
-Use GNU Make to build the program. Run `make` in the root of the program's directory to start a build. Once complete, create a file named `portnums.txt` inside the `config` directory. The first two lines should be used to specify an inclusive range of ports that the program may listen to, such as the following:
+Use GNU Make to build the program. Run `make` in the root of the program's directory to start a build. Once complete, create a file named `portnums.txt` inside of the `config` directory. The first two lines should be used to specify an inclusive range of ports that the program may listen to, such as the following:
 
 ```
 2000
 4000
 ```
 
-Optionally, you can create create a file named `neighbors.txt` inside of the `config` directory to specify peers that the program may contact. Each peer should be written on a separate line in the form `host:port`. If you do not create a file, the program will ask for a neighbor when it starts and create the file automatically. Below is an example:
+Optionally, you can create a file named `neighbors.txt` inside of the `config` directory to specify peers that the program may contact. Each peer should be written on a separate line in the form `host:port`. If you do not create a file, the program will ask for a neighbor when it starts and create the file automatically. Below is an example:
 
 ```
 localhost:3182
@@ -41,7 +41,7 @@ Finally, place any files that you want to make available to other peers inside o
 
 # Usage
 
-Run `bin/peer -c` to start the program and its command-line interface. If you want to start the program without the command-line interface (i.e. as a daemon), leave off the `-c` flag.
+Run `bin/peer -c` to start the program and its command-line interface. If you want to start the program without its command-line interface (i.e. as a daemon), leave off the `-c` flag.
 
 Once the program starts, run `help` to view a list of commands. If a command requires arguments, you can type in the command without arguments to view its usage.
 
